@@ -1,0 +1,152 @@
+[
+  {
+    "id": "tip_001",
+    "text": "Try body doubling — work alongside someone (even silently on video call). The social presence activates accountability circuits in the ADHD brain.",
+    "emoji": "👥",
+    "category": "focus"
+  },
+  {
+    "id": "tip_002",
+    "text": "Use the 2-minute rule: if a task takes under 2 minutes, do it NOW. Don't add it to a list. ADHD brains lose tasks in lists.",
+    "emoji": "⚡",
+    "category": "productivity"
+  },
+  {
+    "id": "tip_003",
+    "text": "Leave visual cues for yourself. Put the thing you need to remember ON TOP of your bag or in front of the door. Out of sight = out of mind is real.",
+    "emoji": "👀",
+    "category": "memory"
+  },
+  {
+    "id": "tip_004",
+    "text": "Keep a 'brain dump' notebook. When a thought pops up mid-task, write it down fast and return to what you were doing. Don't chase the thought.",
+    "emoji": "📓",
+    "category": "focus"
+  },
+  {
+    "id": "tip_005",
+    "text": "Set transition alarms, not just appointment alarms. ADHD makes switching tasks unexpectedly hard. Give yourself a 10-min warning before you need to change.",
+    "emoji": "🔔",
+    "category": "time_management"
+  },
+  {
+    "id": "tip_006",
+    "text": "Break tasks into the smallest possible step. 'Clean kitchen' → 'put one dish in the sink.' Starting is the hardest part for ADHD brains.",
+    "emoji": "🪜",
+    "category": "productivity"
+  },
+  {
+    "id": "tip_007",
+    "text": "Try temptation bundling: only listen to your favorite podcast or playlist when doing a dreaded task. Pair boredom with something you love.",
+    "emoji": "🎧",
+    "category": "motivation"
+  },
+  {
+    "id": "tip_008",
+    "text": "Pair medication with an existing habit (like morning coffee) so you never forget it. Habit stacking works really well for ADHD brains.",
+    "emoji": "☕",
+    "category": "medication"
+  },
+  {
+    "id": "tip_009",
+    "text": "If you're stuck in task paralysis, set a timer for 5 minutes and just START. You don't have to finish — just start. The momentum usually kicks in.",
+    "emoji": "⏱️",
+    "category": "focus"
+  },
+  {
+    "id": "tip_010",
+    "text": "Keep duplicates of commonly lost items (keys, chargers, glasses, pens) in your most-visited spots. Remove the friction of losing things.",
+    "emoji": "🔑",
+    "category": "organization"
+  },
+  {
+    "id": "tip_011",
+    "text": "Try the Pomodoro method: 25 min work, 5 min break. Timers give ADHD brains a deadline to race against — and deadlines are dopamine.",
+    "emoji": "🍅",
+    "category": "productivity"
+  },
+  {
+    "id": "tip_012",
+    "text": "Use a whiteboard in a visible spot for your 1-3 must-do tasks today. Physical, visible, erasable. Much better than a long digital to-do list.",
+    "emoji": "📋",
+    "category": "organization"
+  },
+  {
+    "id": "tip_013",
+    "text": "Move your body before a hard task. Even 10 minutes of walking boosts dopamine and makes focus significantly easier for ADHD brains.",
+    "emoji": "🚶",
+    "category": "lifestyle"
+  },
+  {
+    "id": "tip_014",
+    "text": "If you always forget something before leaving the house, create a 'launch pad' — one spot by the door for everything you need tomorrow.",
+    "emoji": "🚪",
+    "category": "organization"
+  },
+  {
+    "id": "tip_015",
+    "text": "Tell someone your goal out loud. Social accountability is one of the most effective ADHD focus hacks. Even a text to a friend counts.",
+    "emoji": "💬",
+    "category": "accountability"
+  },
+  {
+    "id": "tip_016",
+    "text": "Try 'time blocking' on your calendar. Schedule specific tasks in time slots — not just meetings. ADHD brains do better with structure that's visible.",
+    "emoji": "📅",
+    "category": "time_management"
+  },
+  {
+    "id": "tip_017",
+    "text": "Wear noise-cancelling headphones even with nothing playing. They signal to your brain (and others): 'I am in focus mode now.'",
+    "emoji": "🎶",
+    "category": "focus"
+  },
+  {
+    "id": "tip_018",
+    "text": "Batch similar tasks together. Reply to all emails at once. Make all phone calls in one block. Task-switching is expensive for ADHD brains.",
+    "emoji": "📦",
+    "category": "productivity"
+  },
+  {
+    "id": "tip_019",
+    "text": "Add 'buffer time' everywhere. ADHD brains consistently underestimate how long things take. If you think it takes 20 min, plan for 40.",
+    "emoji": "🕐",
+    "category": "time_management"
+  },
+  {
+    "id": "tip_020",
+    "text": "Don't rely on memory — externalize everything. Sticky notes, phone reminders, voice memos. Your brain was not designed to be your to-do list.",
+    "emoji": "📱",
+    "category": "memory"
+  },
+  {
+    "id": "tip_021",
+    "text": "When you catch yourself doomscrolling, don't shame yourself — ask 'what am I avoiding?' Then do just 2 minutes of that task.",
+    "emoji": "📲",
+    "category": "self_compassion"
+  },
+  {
+    "id": "tip_022",
+    "text": "Create routines that require zero decisions. Same breakfast, same morning order, same route. Decision fatigue hits ADHD brains extra hard.",
+    "emoji": "🔄",
+    "category": "organization"
+  },
+  {
+    "id": "tip_023",
+    "text": "Use a visual timer (like a Time Timer) instead of a digital clock. Seeing time disappear is more compelling to ADHD brains than reading numbers.",
+    "emoji": "🟠",
+    "category": "time_management"
+  },
+  {
+    "id": "tip_024",
+    "text": "Celebrate small wins out loud. Completing a task feels good, but verbalizing it — 'I did the thing!' — reinforces the dopamine hit and builds momentum.",
+    "emoji": "🎉",
+    "category": "motivation"
+  },
+  {
+    "id": "tip_025",
+    "text": "Be honest with people about your ADHD when it matters. Asking for deadlines, check-ins, or written instructions isn't weakness — it's smart self-management.",
+    "emoji": "🤝",
+    "category": "self_advocacy"
+  }
+]

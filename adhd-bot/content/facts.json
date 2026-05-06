@@ -1,0 +1,152 @@
+[
+  {
+    "id": "fact_001",
+    "text": "ADHD affects ~4–5% of adults worldwide. You are very much not alone in this.",
+    "emoji": "🌍",
+    "category": "prevalence"
+  },
+  {
+    "id": "fact_002",
+    "text": "The ADHD brain has lower baseline dopamine levels. That craving for novelty and excitement? It's biology, not a character flaw.",
+    "emoji": "🧠",
+    "category": "brain_science"
+  },
+  {
+    "id": "fact_003",
+    "text": "ADHD is ~75% heritable. If you have it, there's a good chance a parent or sibling does too — often undiagnosed.",
+    "emoji": "🧬",
+    "category": "genetics"
+  },
+  {
+    "id": "fact_004",
+    "text": "Time blindness is real. ADHD brains have difficulty sensing time passing, which is why 'just 5 minutes' becomes 2 hours.",
+    "emoji": "⏰",
+    "category": "symptoms"
+  },
+  {
+    "id": "fact_005",
+    "text": "Hyperfocus is a genuine ADHD superpower. When something sparks interest, the ADHD brain can sustain deep, intense focus for hours.",
+    "emoji": "🔥",
+    "category": "strengths"
+  },
+  {
+    "id": "fact_006",
+    "text": "Women and girls with ADHD are significantly underdiagnosed. Symptoms often present differently and get mistaken for anxiety or being 'ditzy'.",
+    "emoji": "💙",
+    "category": "diagnosis"
+  },
+  {
+    "id": "fact_007",
+    "text": "Exercise is one of the most evidence-backed non-medication treatments for ADHD — it boosts dopamine AND norepinephrine.",
+    "emoji": "🏃",
+    "category": "treatment"
+  },
+  {
+    "id": "fact_008",
+    "text": "Up to 80% of people with ADHD have sleep problems, often due to a delayed circadian rhythm. Night owl tendencies aren't laziness.",
+    "emoji": "🌙",
+    "category": "sleep"
+  },
+  {
+    "id": "fact_009",
+    "text": "ADHD and anxiety co-occur in about 50% of adults with ADHD. Often the anxiety IS the ADHD — fear of forgetting, failing, or falling behind.",
+    "emoji": "💭",
+    "category": "comorbidities"
+  },
+  {
+    "id": "fact_010",
+    "text": "The ADHD prefrontal cortex (responsible for planning and impulse control) develops on average 3 years behind neurotypical peers.",
+    "emoji": "🧪",
+    "category": "brain_science"
+  },
+  {
+    "id": "fact_011",
+    "text": "Many adults weren't diagnosed until adulthood — sometimes their 30s, 40s, or later. Late diagnosis is valid, and it changes everything.",
+    "emoji": "💡",
+    "category": "diagnosis"
+  },
+  {
+    "id": "fact_012",
+    "text": "ADHD brains show more creative cross-connections between brain regions. That 'random' idea you had mid-conversation? Classic ADHD brain working.",
+    "emoji": "✨",
+    "category": "strengths"
+  },
+  {
+    "id": "fact_013",
+    "text": "Rejection sensitive dysphoria (RSD) isn't in the DSM, but it's one of the most painful aspects of ADHD for many adults. Your feelings are valid.",
+    "emoji": "❤️",
+    "category": "emotional"
+  },
+  {
+    "id": "fact_014",
+    "text": "ADHD is not a problem of knowing what to do — it's a problem of doing what you know. Executive function is the bottleneck, not intelligence.",
+    "emoji": "🎯",
+    "category": "brain_science"
+  },
+  {
+    "id": "fact_015",
+    "text": "Studies show people with ADHD are more likely to be entrepreneurs. The impulsivity, risk tolerance, and creative thinking? Business advantages.",
+    "emoji": "🚀",
+    "category": "strengths"
+  },
+  {
+    "id": "fact_016",
+    "text": "The ADHD nervous system is interest-based, not importance-based. That's why you can play video games for 8 hours but can't write a 1-page report.",
+    "emoji": "🎮",
+    "category": "brain_science"
+  },
+  {
+    "id": "fact_017",
+    "text": "ADHD medication doesn't 'fix' the brain — it raises dopamine levels to a range that makes self-regulation feel more accessible.",
+    "emoji": "💊",
+    "category": "treatment"
+  },
+  {
+    "id": "fact_018",
+    "text": "Many people with ADHD experience 'task paralysis' — the inability to start a task despite wanting to. It's not procrastination; it's a neurological barrier.",
+    "emoji": "🧱",
+    "category": "symptoms"
+  },
+  {
+    "id": "fact_019",
+    "text": "ADHD brains are often described as having a 'Ferrari engine with bicycle brakes.' Tons of power — regulation is the challenge.",
+    "emoji": "🏎️",
+    "category": "brain_science"
+  },
+  {
+    "id": "fact_020",
+    "text": "Emotional dysregulation — big feelings that hit fast and hard — is one of the most impairing but least-discussed aspects of ADHD.",
+    "emoji": "🌊",
+    "category": "emotional"
+  },
+  {
+    "id": "fact_021",
+    "text": "ADHD does NOT mean you can't focus. It means your brain regulates attention differently — too much in some areas, too little in others.",
+    "emoji": "🔭",
+    "category": "myths"
+  },
+  {
+    "id": "fact_022",
+    "text": "Working memory — holding information 'in mind' while using it — is often impaired in ADHD. That's why you walked into a room and forgot why.",
+    "emoji": "📦",
+    "category": "symptoms"
+  },
+  {
+    "id": "fact_023",
+    "text": "Physical movement helps ADHD brains regulate. Fidgeting, pacing, doodling — these often improve focus, not reduce it.",
+    "emoji": "🤸",
+    "category": "tips"
+  },
+  {
+    "id": "fact_024",
+    "text": "ADHD is associated with higher rates of creativity and outside-the-box thinking across multiple studies. Your brain really does work differently.",
+    "emoji": "🎨",
+    "category": "strengths"
+  },
+  {
+    "id": "fact_025",
+    "text": "Sugar and diet don't cause ADHD, but they can affect symptoms. Stable blood sugar helps with focus and emotional regulation.",
+    "emoji": "🥗",
+    "category": "lifestyle"
+  }
+]

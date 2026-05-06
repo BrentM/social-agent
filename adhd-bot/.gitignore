@@ -1,0 +1,36 @@
+# Environment
+.env
+
+# Database
+data/bot.db
+data/*.db
+
+# Logs
+logs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Type checking
+.mypy_cache/
+
+# Finder (MacOS) / Windows
+.DS_Store
+Thumbs.db
