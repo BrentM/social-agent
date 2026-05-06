@@ -23,6 +23,25 @@ cp .env.example .env
 
 See `ADHD_BOT_PLAN.md` for full Twitter API setup instructions.
 
+### 2a. (Optional) Use the X API Playground for local testing
+
+[xdevplatform/playground](https://github.com/xdevplatform/playground) is a local mock server that simulates the Twitter/X API so you can develop and test without hitting rate limits or needing real credentials.
+
+```bash
+# In a separate terminal — start the playground server
+git clone https://github.com/xdevplatform/playground
+cd playground
+# follow the playground's own setup instructions, then start it (default port 8080)
+```
+
+Then in your `.env`, uncomment and set:
+
+```
+X_API_BASE_URL=http://localhost:8080
+```
+
+Leave `X_API_BASE_URL` unset (or remove it) to switch back to the real API.
+
 ### 3. Initialize Database
 
 ```bash

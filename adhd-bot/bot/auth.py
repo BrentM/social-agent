@@ -10,12 +10,16 @@ from loguru import logger
 load_dotenv()
 
 
+def _base_url() -> str | None:
+    return os.getenv("X_API_BASE_URL") or None
+
+
 def get_client() -> tweepy.Client:
     """
     Returns an authenticated Tweepy Client (API v2).
     Used for most modern operations: posting, mentions, user search.
     """
-    client = tweepy.Client(
+    kwargs = dict(
         bearer_token=os.getenv("BEARER_TOKEN"),
         consumer_key=os.getenv("API_KEY"),
         consumer_secret=os.getenv("API_KEY_SECRET"),
@@ -23,6 +27,11 @@ def get_client() -> tweepy.Client:
         access_token_secret=os.getenv("ACCESS_TOKEN_SECRET"),
         wait_on_rate_limit=True,
     )
+    base_url = _base_url()
+    if base_url:
+        kwargs["base_url"] = base_url
+        logger.info(f"Using playground host: {base_url}")
+    client = tweepy.Client(**kwargs)
     logger.debug("Tweepy v2 Client initialized.")
     return client
 
@@ -38,7 +47,20 @@ def get_api_v1() -> tweepy.API:
         access_token=os.getenv("ACCESS_TOKEN"),
         access_token_secret=os.getenv("ACCESS_TOKEN_SECRET"),
     )
-    api = tweepy.API(auth, wait_on_rate_limit=True)
+    base_url = _base_url()
+    if base_url:
+        from urllib.parse import urlparse
+        parsed = urlparse(base_url)
+        api = tweepy.API(
+            auth,
+            host=parsed.netloc,
+            api_root="/1.1",
+            secure=(parsed.scheme == "https"),
+            wait_on_rate_limit=True,
+        )
+        logger.info(f"Using playground host: {base_url}")
+    else:
+        api = tweepy.API(auth, wait_on_rate_limit=True)
     logger.debug("Tweepy v1.1 API initialized.")
     return api
 
