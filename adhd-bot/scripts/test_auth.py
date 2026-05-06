@@ -24,13 +24,14 @@ def main():
     client = get_client()
 
     # Try fetching your own user info
-    me = client.get_me(user_fields=["public_metrics", "description"])
+    me = client.users.get_me(user_fields=["public_metrics", "description"])
     if me.data:
         print(f"\n✅ Auth successful!")
-        print(f"   Username: @{me.data.username}")
-        print(f"   Name:     {me.data.name}")
-        if hasattr(me.data, "public_metrics") and me.data.public_metrics:
-            print(f"   Followers: {me.data.public_metrics.get('followers_count', 'N/A')}")
+        print(f"   Username: @{me.data['username']}")
+        print(f"   Name:     {me.data['name']}")
+        public_metrics = me.data.get("public_metrics")
+        if public_metrics:
+            print(f"   Followers: {public_metrics.get('followers_count', 'N/A')}")
         print()
     else:
         logger.error("❌ Could not fetch user data.")

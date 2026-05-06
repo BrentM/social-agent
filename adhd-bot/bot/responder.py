@@ -6,6 +6,7 @@ import json
 import random
 import os
 from loguru import logger
+from xdk.posts.models import CreateRequest, CreateRequestReply
 from bot.auth import get_client
 from bot.database import mark_mention_seen
 
@@ -38,13 +39,14 @@ def classify_mention(text: str) -> str:
     return "general"
 
 
-def respond_to_mention(mention) -> bool:
+def respond_to_mention(mention: dict) -> bool:
     """
     Selects an appropriate reply and sends it to the mention author.
     Returns True if reply was sent successfully.
+    mention is a dict with at least 'id' and 'text' keys.
     """
-    mention_id = str(mention.id)
-    text = mention.text
+    mention_id = str(mention["id"])
+    text = mention["text"]
     mention_type = classify_mention(text)
 
     replies = load_replies()
@@ -53,11 +55,13 @@ def respond_to_mention(mention) -> bool:
 
     try:
         client = get_client()
-        response = client.create_tweet(
-            text=reply_text,
-            in_reply_to_tweet_id=mention_id,
+        response = client.posts.create(
+            body=CreateRequest(
+                text=reply_text,
+                reply=CreateRequestReply(in_reply_to_tweet_id=mention_id),
+            )
         )
-        tweet_id = response.data["id"]
+        tweet_id = response.data.id
         mark_mention_seen(mention_id, replied=True)
         logger.info(f"✅ Replied [{mention_type}] to mention {mention_id}: {reply_text[:60]}")
         return True

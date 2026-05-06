@@ -86,9 +86,10 @@ def post_scheduled(cycle_index: int = 0):
     tweet_text = format_tweet(item, category)
 
     try:
+        from xdk.posts.models import CreateRequest
         client = get_client()
-        response = client.create_tweet(text=tweet_text)
-        tweet_id = response.data["id"]
+        response = client.posts.create(body=CreateRequest(text=tweet_text))
+        tweet_id = response.data.id
         mark_posted(item["id"], category, tweet_id)
         logger.info(f"✅ Posted [{category}] tweet ID {tweet_id}: {tweet_text[:60]}…")
     except Exception as e:

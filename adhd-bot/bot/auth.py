@@ -3,61 +3,37 @@ auth.py — Twitter/X API authentication for ADHD Bot
 """
 
 import os
-import tweepy
+import requests
+import xdk
+from xdk.oauth1_auth import OAuth1
 from dotenv import load_dotenv
 from loguru import logger
 
 load_dotenv()
 
 
-def _base_url() -> str | None:
-    return os.getenv("X_API_BASE_URL") or None
-
-
-def get_client() -> tweepy.Client:
+def get_client() -> xdk.Client:
     """
-    Returns an authenticated Tweepy Client (API v2).
-    Used for most modern operations: posting, mentions, user search.
+    Returns an authenticated xdk Client (API v2).
+    Uses OAuth1 for write operations and bearer token for read operations.
     """
-    client = tweepy.Client(
+    base_url = os.getenv("X_API_BASE_URL", "https://api.x.com")
+
+    oauth1 = OAuth1(
+        api_key=os.getenv("API_KEY"),
+        api_secret=os.getenv("API_KEY_SECRET"),
+        callback="oob",
+        access_token=os.getenv("ACCESS_TOKEN"),
+        access_token_secret=os.getenv("ACCESS_TOKEN_SECRET"),
+    )
+
+    client = xdk.Client(
+        base_url=base_url,
         bearer_token=os.getenv("BEARER_TOKEN"),
-        consumer_key=os.getenv("API_KEY"),
-        consumer_secret=os.getenv("API_KEY_SECRET"),
-        access_token=os.getenv("ACCESS_TOKEN"),
-        access_token_secret=os.getenv("ACCESS_TOKEN_SECRET"),
-        wait_on_rate_limit=True,
+        auth=oauth1,
     )
-    logger.debug("Tweepy v2 Client initialized.")
+    logger.debug("xdk Client initialized.")
     return client
-
-
-def get_api_v1() -> tweepy.API:
-    """
-    Returns an authenticated Tweepy API v1.1 instance.
-    Used for operations not yet available in v2 (e.g. follow).
-    """
-    auth = tweepy.OAuth1UserHandler(
-        consumer_key=os.getenv("API_KEY"),
-        consumer_secret=os.getenv("API_KEY_SECRET"),
-        access_token=os.getenv("ACCESS_TOKEN"),
-        access_token_secret=os.getenv("ACCESS_TOKEN_SECRET"),
-    )
-    base_url = _base_url()
-    if base_url:
-        from urllib.parse import urlparse
-        parsed = urlparse(base_url)
-        api = tweepy.API(
-            auth,
-            host=parsed.netloc,
-            api_root="/1.1",
-            secure=(parsed.scheme == "https"),
-            wait_on_rate_limit=True,
-        )
-        logger.info(f"Using playground host: {base_url}")
-    else:
-        api = tweepy.API(auth, wait_on_rate_limit=True)
-    logger.debug("Tweepy v1.1 API initialized.")
-    return api
 
 
 def verify_credentials() -> bool:
@@ -66,14 +42,17 @@ def verify_credentials() -> bool:
     Returns True if authentication succeeds, False otherwise.
     """
     try:
-        api = get_api_v1()
-        me = api.verify_credentials()
-        if me:
-            logger.info(f"✅ Authenticated as @{me.screen_name}")
+        client = get_client()
+        me = client.users.get_me()
+        if me.data:
+            logger.info(f"✅ Authenticated as @{me.data['username']}")
             return True
         return False
-    except tweepy.errors.Unauthorized:
-        logger.error("❌ Authentication failed. Check your API keys in .env")
+    except requests.exceptions.HTTPError as e:
+        if e.response is not None and e.response.status_code == 401:
+            logger.error("❌ Authentication failed. Check your API keys in .env")
+        else:
+            logger.error(f"❌ HTTP error during auth: {e}")
         return False
     except Exception as e:
         logger.error(f"❌ Unexpected error during auth: {e}")

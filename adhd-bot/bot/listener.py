@@ -21,30 +21,32 @@ def poll_mentions():
 
     try:
         # Get bot's own user ID first
-        me = client.get_me()
+        me = client.users.get_me()
         if not me.data:
             logger.error("Could not fetch bot user info.")
             return
-        bot_user_id = me.data.id
+        bot_user_id = me.data["id"]
 
-        # Fetch recent mentions
-        mentions = client.get_users_mentions(
-            id=bot_user_id,
-            max_results=10,
-            tweet_fields=["author_id", "text", "created_at"],
+        # Fetch recent mentions (first page only)
+        page = next(
+            client.users.get_mentions(
+                id=bot_user_id,
+                max_results=10,
+                tweet_fields=["author_id", "text", "created_at"],
+            )
         )
 
-        if not mentions.data:
+        if not page.data:
             logger.info("No new mentions found.")
             return
 
-        for mention in mentions.data:
-            mention_id = str(mention.id)
+        for mention in page.data:
+            mention_id = str(mention["id"])
 
             if has_seen_mention(mention_id):
                 continue
 
-            logger.info(f"📩 New mention {mention_id}: {mention.text[:60]}")
+            logger.info(f"📩 New mention {mention_id}: {mention['text'][:60]}")
             mark_mention_seen(mention_id, replied=False)
             respond_to_mention(mention)
 
