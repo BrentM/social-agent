@@ -33,8 +33,8 @@ All three required endpoints are available under this model:
 | `GET /2/users/:id/tweets` | Yes | 10,000 req/15 min | ~$0.005–0.01/post read |
 | `GET /2/users/by/username/:username` | Yes | 300 req/15 min | ~$0.001–0.005 |
 
-**Estimated daily research cost:** ~18 API calls × ~10 posts each = ~180 post
-reads × $0.01 = **~$1.80/day** ($54/month). Set a monthly spending cap in the
+**Estimated daily research cost:** ~18 API calls × ~3 posts each = ~54 post
+reads × $0.01 = **~$0.54/day** (~$16/month). Set a monthly spending cap in the
 X Developer Console to stay within budget.
 
 ---
@@ -124,7 +124,7 @@ For each keyword:
 ```python
 search_recent(
     query=keyword + " lang:en -is:retweet",
-    max_results=10,
+    max_results=3,
     tweet_fields=["public_metrics", "author_id", "text"],
     expansions=["author_id"],
 )
@@ -145,7 +145,7 @@ configured_accounts.select("*").eq("is_research", True)
 For each account:
 1. Use `twitter_user_id` if already cached in the row
 2. If `NULL`: call `get_by_username()` and upsert `twitter_user_id`
-3. Call `get_user_tweets(id, max_results=5, tweet_fields=[...])` for posts
+3. Call `get_user_tweets(id, max_results=3, tweet_fields=[...])` for posts
    from the last 24 hours
 4. Upsert into `research_posts` with `source='key_person'`
 
@@ -166,7 +166,7 @@ For each hashtag:
 search_recent(
     query=hashtag + " lang:en -is:retweet",
     sort_order="relevancy",
-    max_results=10,
+    max_results=3,
     tweet_fields=["public_metrics"],
 )
 ```
@@ -327,10 +327,10 @@ scheduler.add_job(
 
 | Operation | Calls | Posts read | Est. cost |
 |---|---|---|---|
-| Keyword searches (5) | 5 | ~50 | $0.50 |
-| Key people timelines (4) | 4 | ~20 | $0.20 |
-| Hashtag searches (5) | 5 | ~50 | $0.50 |
+| Keyword searches (5) | 5 | ~15 | $0.15 |
+| Key people timelines (4) | 4 | ~12 | $0.12 |
+| Hashtag searches (5) | 5 | ~15 | $0.15 |
 | Username lookups (4, cached) | 0–4 | — | $0.00–0.02 |
-| **Total** | **~18** | **~120** | **~$1.20/day** (~$36/month) |
+| **Total** | **~18** | **~42** | **~$0.42/day** (~$13/month) |
 
 Set a $50/month spending cap in the X Developer Console as a safety net.
