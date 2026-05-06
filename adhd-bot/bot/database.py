@@ -1,117 +1,90 @@
 """
-database.py — SQLite database setup and helpers for ADHD Bot
+database.py — Supabase database helpers for ADHD Bot
 """
 
-import sqlite3
 import os
+from datetime import date, datetime, timedelta, timezone
 from loguru import logger
+from supabase import create_client, Client
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "bot.db")
+_client: Client | None = None
 
 
-def get_connection() -> sqlite3.Connection:
-    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-    return sqlite3.connect(DB_PATH)
+def get_client() -> Client:
+    global _client
+    if _client is None:
+        url = os.environ["SUPABASE_URL"]
+        key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+        _client = create_client(url, key)
+    return _client
 
 
 def init_db():
-    """Creates all tables if they don't exist."""
-    with get_connection() as conn:
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS posted_content (
-                id          INTEGER PRIMARY KEY AUTOINCREMENT,
-                content_id  TEXT NOT NULL,
-                category    TEXT NOT NULL,
-                tweet_id    TEXT,
-                posted_at   DATETIME DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
-
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS mentions_seen (
-                id          INTEGER PRIMARY KEY AUTOINCREMENT,
-                mention_id  TEXT NOT NULL UNIQUE,
-                replied     BOOLEAN DEFAULT 0,
-                seen_at     DATETIME DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
-
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS followed_accounts (
-                id              INTEGER PRIMARY KEY AUTOINCREMENT,
-                twitter_user_id TEXT NOT NULL UNIQUE,
-                username        TEXT,
-                followed_at     DATETIME DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
-
-        conn.commit()
-        logger.info("✅ Database initialized.")
+    """Verifies Supabase connectivity. Tables must exist via migration.sql."""
+    try:
+        client = get_client()
+        client.table("posted_content").select("id").limit(1).execute()
+        client.table("mentions_seen").select("id").limit(1).execute()
+        client.table("followed_accounts").select("id").limit(1).execute()
+        logger.info("✅ Supabase connected and tables verified.")
+    except Exception as e:
+        logger.error(f"❌ Supabase connection failed: {e}")
+        raise
 
 
 # ── Posted Content ──────────────────────────────────────────────────────────
 
 def mark_posted(content_id: str, category: str, tweet_id: str = None):
-    with get_connection() as conn:
-        conn.execute(
-            "INSERT INTO posted_content (content_id, category, tweet_id) VALUES (?, ?, ?)",
-            (content_id, category, tweet_id),
-        )
-        conn.commit()
+    get_client().table("posted_content").insert({
+        "content_id": content_id,
+        "category": category,
+        "tweet_id": tweet_id,
+    }).execute()
 
 
 def get_posted_ids(category: str) -> set:
-    with get_connection() as conn:
-        rows = conn.execute(
-            "SELECT content_id FROM posted_content WHERE category = ?", (category,)
-        ).fetchall()
-    return {row[0] for row in rows}
+    response = get_client().table("posted_content").select("content_id").eq("category", category).execute()
+    return {row["content_id"] for row in response.data}
 
 
 # ── Mentions ────────────────────────────────────────────────────────────────
 
 def has_seen_mention(mention_id: str) -> bool:
-    with get_connection() as conn:
-        row = conn.execute(
-            "SELECT id FROM mentions_seen WHERE mention_id = ?", (mention_id,)
-        ).fetchone()
-    return row is not None
+    response = get_client().table("mentions_seen").select("id").eq("mention_id", mention_id).execute()
+    return len(response.data) > 0
 
 
 def mark_mention_seen(mention_id: str, replied: bool = False):
-    with get_connection() as conn:
-        conn.execute(
-            "INSERT OR IGNORE INTO mentions_seen (mention_id, replied) VALUES (?, ?)",
-            (mention_id, int(replied)),
-        )
-        conn.commit()
+    get_client().table("mentions_seen").upsert(
+        {"mention_id": mention_id, "replied": replied},
+        on_conflict="mention_id",
+    ).execute()
 
 
 # ── Follows ─────────────────────────────────────────────────────────────────
 
 def has_followed(twitter_user_id: str) -> bool:
-    with get_connection() as conn:
-        row = conn.execute(
-            "SELECT id FROM followed_accounts WHERE twitter_user_id = ?",
-            (twitter_user_id,),
-        ).fetchone()
-    return row is not None
+    response = get_client().table("followed_accounts").select("id").eq("twitter_user_id", twitter_user_id).execute()
+    return len(response.data) > 0
 
 
 def mark_followed(twitter_user_id: str, username: str = None):
-    with get_connection() as conn:
-        conn.execute(
-            "INSERT OR IGNORE INTO followed_accounts (twitter_user_id, username) VALUES (?, ?)",
-            (twitter_user_id, username),
-        )
-        conn.commit()
+    get_client().table("followed_accounts").upsert(
+        {"twitter_user_id": twitter_user_id, "username": username},
+        on_conflict="twitter_user_id",
+    ).execute()
 
 
 def get_daily_follow_count() -> int:
-    with get_connection() as conn:
-        row = conn.execute(
-            "SELECT COUNT(*) FROM followed_accounts WHERE DATE(followed_at) = DATE('now')"
-        ).fetchone()
-    return row[0] if row else 0
+    today = datetime.now(tz=timezone.utc).date()
+    day_start = datetime.combine(today, datetime.min.time(), tzinfo=timezone.utc).isoformat()
+    day_end = datetime.combine(today + timedelta(days=1), datetime.min.time(), tzinfo=timezone.utc).isoformat()
+    response = (
+        get_client()
+        .table("followed_accounts")
+        .select("id", count="exact")
+        .gte("followed_at", day_start)
+        .lt("followed_at", day_end)
+        .execute()
+    )
+    return response.count or 0
