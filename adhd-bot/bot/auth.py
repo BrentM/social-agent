@@ -19,7 +19,7 @@ def get_client() -> tweepy.Client:
     Returns an authenticated Tweepy Client (API v2).
     Used for most modern operations: posting, mentions, user search.
     """
-    kwargs = dict(
+    client = tweepy.Client(
         bearer_token=os.getenv("BEARER_TOKEN"),
         consumer_key=os.getenv("API_KEY"),
         consumer_secret=os.getenv("API_KEY_SECRET"),
@@ -27,11 +27,6 @@ def get_client() -> tweepy.Client:
         access_token_secret=os.getenv("ACCESS_TOKEN_SECRET"),
         wait_on_rate_limit=True,
     )
-    base_url = _base_url()
-    if base_url:
-        kwargs["base_url"] = base_url
-        logger.info(f"Using playground host: {base_url}")
-    client = tweepy.Client(**kwargs)
     logger.debug("Tweepy v2 Client initialized.")
     return client
 
@@ -71,10 +66,10 @@ def verify_credentials() -> bool:
     Returns True if authentication succeeds, False otherwise.
     """
     try:
-        client = get_client()
-        me = client.get_me()
-        if me.data:
-            logger.info(f"✅ Authenticated as @{me.data.username}")
+        api = get_api_v1()
+        me = api.verify_credentials()
+        if me:
+            logger.info(f"✅ Authenticated as @{me.screen_name}")
             return True
         return False
     except tweepy.errors.Unauthorized:
