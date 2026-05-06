@@ -57,21 +57,24 @@ CREATE TABLE IF NOT EXISTS reply_templates (
 
 CREATE TABLE IF NOT EXISTS configured_queries (
     id          BIGSERIAL   PRIMARY KEY,
-    query       TEXT        NOT NULL UNIQUE,
+    query       TEXT        NOT NULL,
     purpose     TEXT        NOT NULL CHECK (purpose IN ('follow', 'research_keyword', 'research_hashtag')),
     active      BOOLEAN     DEFAULT TRUE,
-    created_at  TIMESTAMPTZ DEFAULT NOW()
+    created_at  TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE (query, purpose)
 );
 
 -- ── Configured accounts (replaces follow_targets seed_accounts + research key_people)
--- purpose: 'follow_seed' = bot should follow this account
---          'research'    = pull this account's timeline for content signals
+-- is_follow_seed: bot should follow this account
+-- is_research:    pull this account's timeline for content signals
+-- An account can serve both purposes simultaneously.
 
 CREATE TABLE IF NOT EXISTS configured_accounts (
     id              BIGSERIAL   PRIMARY KEY,
     username        TEXT        NOT NULL UNIQUE,
     twitter_user_id TEXT,
-    purpose         TEXT        NOT NULL CHECK (purpose IN ('follow_seed', 'research')),
+    is_follow_seed  BOOLEAN     DEFAULT FALSE,
+    is_research     BOOLEAN     DEFAULT FALSE,
     last_checked_at TIMESTAMPTZ,
     created_at      TIMESTAMPTZ DEFAULT NOW()
 );
@@ -184,7 +187,7 @@ INSERT INTO configured_queries (query, purpose) VALUES
 ('adult ADHD diagnosis',  'follow'),
 ('#ADHDAwareness',        'follow'),
 ('ADHD brain science',    'follow')
-ON CONFLICT (query) DO NOTHING;
+ON CONFLICT (query, purpose) DO NOTHING;
 
 -- Research keyword queries (from research_agent plan)
 INSERT INTO configured_queries (query, purpose) VALUES
@@ -193,7 +196,7 @@ INSERT INTO configured_queries (query, purpose) VALUES
 ('ADHD dopamine',         'research_keyword'),
 ('ADHD rejection sensitive dysphoria', 'research_keyword'),
 ('ADHD task paralysis',   'research_keyword')
-ON CONFLICT (query) DO NOTHING;
+ON CONFLICT (query, purpose) DO NOTHING;
 
 -- Research hashtags (from research_agent plan)
 INSERT INTO configured_queries (query, purpose) VALUES
@@ -202,21 +205,12 @@ INSERT INTO configured_queries (query, purpose) VALUES
 ('#ADHDTips',         'research_hashtag'),
 ('#Neurodiversity',   'research_hashtag'),
 ('#ADHDAwareness',    'research_hashtag')
-ON CONFLICT (query) DO NOTHING;
+ON CONFLICT (query, purpose) DO NOTHING;
 
--- Seed accounts (from follow_targets.json["seed_accounts_to_follow"])
-INSERT INTO configured_accounts (username, purpose) VALUES
-('ADHDreWired',  'follow_seed'),
-('HowToADHD',    'follow_seed'),
-('drhallowell',  'follow_seed'),
-('ADHDCoaches',  'follow_seed')
-ON CONFLICT (username) DO NOTHING;
-
--- Research key people (same accounts — used for content signal research too)
-INSERT INTO configured_accounts (username, purpose)
-VALUES
-('ADHDreWired',  'research'),
-('HowToADHD',    'research'),
-('drhallowell',  'research'),
-('ADHDCoaches',  'research')
+-- Seed accounts — follow targets and research key people (all four serve both purposes)
+INSERT INTO configured_accounts (username, is_follow_seed, is_research) VALUES
+('ADHDreWired', TRUE, TRUE),
+('HowToADHD',   TRUE, TRUE),
+('drhallowell', TRUE, TRUE),
+('ADHDCoaches', TRUE, TRUE)
 ON CONFLICT (username) DO NOTHING;

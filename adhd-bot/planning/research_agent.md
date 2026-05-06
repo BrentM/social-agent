@@ -80,9 +80,9 @@ reply_templates (intent, text, active)
 configured_queries (query UNIQUE, purpose, active)
 
 -- configured_accounts — seed follows and research key people
--- purpose: 'follow_seed' | 'research'
+-- is_follow_seed / is_research flags — one row per account, can serve both purposes
 -- twitter_user_id cached after first API lookup
-configured_accounts (username UNIQUE, twitter_user_id, purpose, last_checked_at)
+configured_accounts (username UNIQUE, twitter_user_id, is_follow_seed, is_research, last_checked_at)
 
 -- research_posts — discovered X posts (reference only, never posted)
 -- source: 'keyword' | 'key_person' | 'hashtag'
@@ -139,7 +139,7 @@ Filter: `like_count >= 5`. Upsert into `research_posts` with
 
 Load active research accounts from Supabase:
 ```python
-configured_accounts.select("*").eq("purpose", "research").eq("active", True)
+configured_accounts.select("*").eq("is_research", True)
 ```
 
 For each account:
