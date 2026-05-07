@@ -94,6 +94,45 @@ CREATE TABLE IF NOT EXISTS research_posts (
     discovered_at   TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- ── x_agent growth system tables ─────────────────────────────────────────────
+-- Additive to the bot/ system. Prefix agent_* to avoid ambiguity.
+
+CREATE TABLE IF NOT EXISTS discovered_users (
+    id               UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+    x_user_id        TEXT        NOT NULL UNIQUE,
+    username         TEXT,
+    bio              TEXT,
+    followers_count  INT         DEFAULT 0,
+    followed_by_agent BOOLEAN    DEFAULT FALSE,
+    followed_at      TIMESTAMPTZ,
+    discovered_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS discovered_posts (
+    id            UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+    x_post_id     TEXT        NOT NULL UNIQUE,
+    author_x_id   TEXT        REFERENCES discovered_users(x_user_id),
+    text          TEXT,
+    like_count    INT         DEFAULT 0,
+    search_query  TEXT,
+    discovered_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS agent_tweets (
+    id         UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+    x_post_id  TEXT,
+    text       TEXT,
+    posted_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS agent_runs (
+    id                  UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+    run_at              TIMESTAMPTZ DEFAULT NOW(),
+    strategy_selected   TEXT,
+    reason              TEXT,
+    post_count_at_time  INT
+);
+
 -- ── Seed data ────────────────────────────────────────────────────────────────
 
 -- Facts (from facts.json)
