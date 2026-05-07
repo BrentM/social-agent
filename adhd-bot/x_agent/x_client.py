@@ -13,8 +13,8 @@ from loguru import logger
 class XClient:
     def __init__(self):
         oauth1 = OAuth1(
-            api_key=os.environ["API_KEY"],
-            api_secret=os.environ["API_KEY_SECRET"],
+            api_key=os.environ["CONSUMER_KEY"],
+            api_secret=os.environ["CONSUMER_KEY_SECRET"],
             callback="oob",
             access_token=os.environ["ACCESS_TOKEN"],
             access_token_secret=os.environ["ACCESS_TOKEN_SECRET"],
