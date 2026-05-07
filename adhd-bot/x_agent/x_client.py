@@ -85,7 +85,7 @@ class XClient:
 
     def post_tweet(self, text: str) -> dict:
         response = self._client.posts.create(body=CreateRequest(text=text))
-        return {"x_post_id": response["data"]["id"]}
+        return {"x_post_id": response.data.id}
 
     def follow_user(self, user_id: str) -> None:
         my_id = self.get_my_user_id()
