@@ -28,7 +28,7 @@ Each agent uses the **Anthropic SDK Tool Runner** to manage the agentic loop aut
 x_agent/
 ├── main.py                  # Scheduler entry point
 ├── orchestrator.py          # Top-level strategy selection agent
-├── x_client.py              # X API v2 wrapper (Tweepy)
+├── x_client.py              # X API v2 wrapper (xdk)
 ├── db.py                    # Supabase read/write layer
 ├── config.py                # API keys and constants
 └── agents/
@@ -43,15 +43,14 @@ x_agent/
 
 ### 1. SDK Tool Runner
 
-As of Anthropic SDK `v0.68.0`, the tool runner handles the entire agentic loop:
-
-- Automatically calls tool functions when Claude requests them
-- Sends `tool_result` blocks back to Claude
-- Iterates until Claude reaches a final response
-- Supports automatic context compaction for long-running tasks
+The `anthropic` Python SDK (beta) provides `client.beta.messages.tool_runner()`, which handles the full agentic loop automatically — no manual `while` loop or `tool_result` formatting required. Tools are decorated with `@beta_tool` (or `@beta_async_tool` for async functions), imported directly from `anthropic`.
 
 ```python
-for message in client.beta.tools.runner(
+from anthropic import Anthropic, beta_tool
+
+client = Anthropic()
+
+for message in client.beta.messages.tool_runner(
     model="claude-haiku-4-5",
     system=SYSTEM_PROMPT,
     messages=[{"role": "user", "content": "Run your growth tasks now."}],
@@ -61,28 +60,32 @@ for message in client.beta.tools.runner(
     print(message)
 ```
 
+The runner iterates until the model stops requesting tool calls, yielding `BetaMessage` objects on each turn.
+
 ---
 
 ### 2. Tools (Shared Across All Agents)
 
-Tools are defined with the `@tool` decorator. Each tool also writes to Supabase as a side effect.
+Tools are defined with `@beta_tool`. The docstring becomes the tool description Claude sees; type annotations define the input schema. Each tool also writes to Supabase as a side effect.
 
 ```python
-@client.beta.tools.tool
+from anthropic import beta_tool
+
+@beta_tool
 def search_posts(query: str, max_results: int = 10) -> str:
     """Search recent X posts by keyword. Saves results to database."""
     results = x_client.search_recent(query, max_results)
     db.save_posts_and_users(results)   # ← persists to Supabase
     return json.dumps(results)
 
-@client.beta.tools.tool
+@beta_tool
 def post_tweet(text: str) -> str:
     """Post a new tweet to X. Logs the tweet to database."""
     post = x_client.create_tweet(text)
     db.log_tweet(post)                 # ← persists to Supabase
     return f"Posted: {text}"
 
-@client.beta.tools.tool
+@beta_tool
 def follow_user(user_id: str) -> str:
     """Follow a user by their X user ID. Updates follow status in database."""
     x_client.follow(user_id)
@@ -93,6 +96,8 @@ def follow_user(user_id: str) -> str:
 ---
 
 ### 3. Supabase Schema
+
+> **⚠ Schema conflict with `research_agent.md`.** That doc defines a more detailed schema (`content_items`, `research_posts`, `configured_queries`, `configured_accounts`, `reply_templates`) that the existing `bot/` system already depends on. The tables below are specific to the `x_agent/` growth system — they are additive, not replacements. Prefix or namespace them (e.g. `agent_*`) to avoid ambiguity when both systems share the same Supabase project.
 
 Data is saved at the point of discovery — before Claude decides what action to take — giving Claude richer context and preventing duplicate follows.
 
@@ -154,14 +159,14 @@ Decision criteria:
 Always provide a clear reason for your choice.
 """
 
-@client.beta.tools.tool
+@beta_tool
 def run_warmup_strategy(reason: str) -> str:
     """Run the warmup agent. Use for new accounts with fewer than 50 posts."""
     agent = WarmupAgent(x_client, db)
     agent.run(f"Reason: {reason}")
     return "Warmup agent completed."
 
-@client.beta.tools.tool
+@beta_tool
 def run_growth_strategy(reason: str) -> str:
     """Run the growth agent. Use for established accounts with 50+ posts."""
     agent = GrowthAgent(x_client, db)
@@ -170,7 +175,7 @@ def run_growth_strategy(reason: str) -> str:
 
 def run_orchestrator():
     stats = db.get_account_stats()
-    for message in client.beta.tools.runner(
+    for message in client.beta.messages.tool_runner(
         model="claude-haiku-4-5",
         system=ORCHESTRATOR_PROMPT,
         messages=[{
@@ -280,7 +285,7 @@ Adding a new strategy requires two steps only:
 Claude will automatically consider the new tool based on its description.
 
 ```python
-@client.beta.tools.tool
+@beta_tool
 def run_engagement_strategy(reason: str) -> str:
     """
     Run when follower count is high but engagement is low.
@@ -297,23 +302,29 @@ def run_engagement_strategy(reason: str) -> str:
 
 ```
 anthropic>=0.68.0
-tweepy
+xdk>=v0.9.0
 supabase
 apscheduler
 python-dotenv
+loguru
 ```
+
+Note: `langchain` / `langchain-anthropic` are being removed from `requirements.txt` — the Agent SDK handles the agentic loop directly.
 
 ---
 
-## X API v2 Rate Limits (Free Tier)
+## X API v2 Rate Limits (Pay-per-Use)
 
-| Action | Limit |
-|---|---|
-| Search | 1 request / 15 min |
-| Post tweet | 17 / 24h |
-| Follow | 400 / day |
+> **As of February 2026, X API switched to pay-per-use pricing.** Fixed subscription tiers (Free / Basic / Pro) no longer exist. All endpoints are available and billed per API call. Set a monthly spending cap in the X Developer Console.
 
-The hourly scheduler with conservative per-run limits (2-3 tweets warmup, 1 tweet growth) stays comfortably within these limits.
+| Action | Endpoint rate limit | Est. cost |
+|---|---|---|
+| Search recent (`GET /2/tweets/search/recent`) | 450 req / 15 min | ~$0.005–0.01 per post read |
+| Post tweet (`POST /2/tweets`) | 17 / 24h per user | per-post cost (see X pricing) |
+| Follow (`POST /2/users/:id/following`) | 400 / day (Twitter ToS) | per-call cost |
+| User lookup (`GET /2/users/by/username/:username`) | 300 req / 15 min | ~$0.001–0.005 |
+
+The hourly scheduler with conservative per-run limits (2-3 tweets warmup, 1 tweet growth) stays well within the 17/24h post limit. Research and follow operations are the primary cost driver — see `research_agent.md` for a daily cost breakdown (~$0.42/day).
 
 ---
 
