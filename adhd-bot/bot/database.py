@@ -3,7 +3,8 @@ database.py — Supabase database helpers for ADHD Bot
 """
 
 import os
-from datetime import date, datetime, timedelta, timezone
+import random
+from datetime import datetime, timedelta, timezone
 from loguru import logger
 from supabase import create_client, Client
 
@@ -88,3 +89,143 @@ def get_daily_follow_count() -> int:
         .execute()
     )
     return response.count or 0
+
+
+# ── Content Items ────────────────────────────────────────────────────────────
+
+def get_content_items(type: str) -> list[dict]:
+    response = (
+        get_client()
+        .table("content_items")
+        .select("*")
+        .eq("type", type)
+        .eq("active", True)
+        .execute()
+    )
+    return response.data
+
+
+def insert_generated_item(content_id: str, type: str, text: str, emoji: str, topic: str):
+    get_client().table("content_items").insert({
+        "content_id": content_id,
+        "type": type,
+        "text": text,
+        "emoji": emoji,
+        "topic": topic,
+        "source": "generated",
+    }).execute()
+
+
+# ── Research Posts ───────────────────────────────────────────────────────────
+
+def upsert_research_post(
+    tweet_id: str,
+    author_username: str,
+    text: str,
+    like_count: int,
+    retweet_count: int,
+    reply_count: int,
+    source: str,
+    source_query: str,
+):
+    get_client().table("research_posts").upsert(
+        {
+            "tweet_id": tweet_id,
+            "author_username": author_username,
+            "text": text,
+            "like_count": like_count,
+            "retweet_count": retweet_count,
+            "reply_count": reply_count,
+            "source": source,
+            "source_query": source_query,
+        },
+        on_conflict="tweet_id",
+    ).execute()
+
+
+def get_todays_research_posts() -> list[dict]:
+    today = datetime.now(tz=timezone.utc).date().isoformat()
+    response = (
+        get_client()
+        .table("research_posts")
+        .select("tweet_id, text, like_count")
+        .gte("discovered_at", today)
+        .execute()
+    )
+    return response.data
+
+
+# ── Configured Accounts ──────────────────────────────────────────────────────
+
+def get_research_accounts() -> list[dict]:
+    response = (
+        get_client()
+        .table("configured_accounts")
+        .select("*")
+        .eq("is_research", True)
+        .execute()
+    )
+    return response.data
+
+
+def cache_account_user_id(username: str, twitter_user_id: str):
+    get_client().table("configured_accounts").upsert(
+        {
+            "username": username,
+            "twitter_user_id": twitter_user_id,
+            "last_checked_at": datetime.now(tz=timezone.utc).isoformat(),
+        },
+        on_conflict="username",
+    ).execute()
+
+
+def update_account_checked_at(username: str):
+    get_client().table("configured_accounts").upsert(
+        {
+            "username": username,
+            "last_checked_at": datetime.now(tz=timezone.utc).isoformat(),
+        },
+        on_conflict="username",
+    ).execute()
+
+
+# ── Configured Queries ───────────────────────────────────────────────────────
+
+def get_follow_queries() -> list[str]:
+    response = (
+        get_client()
+        .table("configured_queries")
+        .select("query")
+        .eq("purpose", "follow")
+        .eq("active", True)
+        .execute()
+    )
+    return [row["query"] for row in response.data]
+
+
+def get_research_queries(purpose: str) -> list[str]:
+    response = (
+        get_client()
+        .table("configured_queries")
+        .select("query")
+        .eq("purpose", purpose)
+        .eq("active", True)
+        .execute()
+    )
+    return [row["query"] for row in response.data]
+
+
+# ── Reply Templates ──────────────────────────────────────────────────────────
+
+def get_reply_template(intent: str) -> str | None:
+    response = (
+        get_client()
+        .table("reply_templates")
+        .select("text")
+        .eq("intent", intent)
+        .eq("active", True)
+        .execute()
+    )
+    if not response.data:
+        return None
+    return random.choice(response.data)["text"]

@@ -2,15 +2,10 @@
 responder.py — Classifies mentions and sends appropriate replies as Boost 🚀
 """
 
-import json
-import random
-import os
 from loguru import logger
 from xdk.posts.models import CreateRequest, CreateRequestReply
 from bot.auth import get_client
-from bot.database import mark_mention_seen
-
-CONTENT_DIR = os.path.join(os.path.dirname(__file__), "..", "content")
+from bot.database import mark_mention_seen, get_reply_template
 
 # Keywords to classify incoming mentions
 QUESTION_KEYWORDS = [
@@ -21,12 +16,6 @@ POSITIVE_KEYWORDS = [
     "thank", "thanks", "love", "great", "amazing", "helpful",
     "good", "awesome", "appreciate", "❤️", "🙏", "💙",
 ]
-
-
-def load_replies() -> dict:
-    path = os.path.join(CONTENT_DIR, "replies.json")
-    with open(path, "r") as f:
-        return json.load(f)
 
 
 def classify_mention(text: str) -> str:
@@ -47,11 +36,15 @@ def respond_to_mention(mention: dict) -> bool:
     """
     mention_id = str(mention["id"])
     text = mention["text"]
-    mention_type = classify_mention(text)
+    intent = classify_mention(text)
 
-    replies = load_replies()
-    reply_options = replies.get(mention_type, replies["general"])
-    reply_text = random.choice(reply_options)
+    reply_text = get_reply_template(intent)
+    if not reply_text:
+        # Fallback to general if intent-specific templates are missing
+        reply_text = get_reply_template("general")
+    if not reply_text:
+        logger.error(f"No reply templates found for intent '{intent}'. Skipping.")
+        return False
 
     try:
         client = get_client()
@@ -63,7 +56,7 @@ def respond_to_mention(mention: dict) -> bool:
         )
         tweet_id = response.data.id
         mark_mention_seen(mention_id, replied=True)
-        logger.info(f"✅ Replied [{mention_type}] to mention {mention_id}: {reply_text[:60]}")
+        logger.info(f"✅ Replied [{intent}] to mention {mention_id}: {reply_text[:60]}")
         return True
     except Exception as e:
         logger.error(f"❌ Failed to reply to mention {mention_id}: {e}")

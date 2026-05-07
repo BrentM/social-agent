@@ -10,6 +10,7 @@ from loguru import logger
 from bot.poster import post_scheduled
 from bot.listener import poll_mentions
 from bot.follower import run_follow_job
+from bot.researcher import run_research_job
 
 # Post times — can be overridden via .env
 POST_TIMES = os.getenv("POST_TIMES", "08:00,13:00,19:00").split(",")
@@ -52,5 +53,15 @@ def build_scheduler() -> BlockingScheduler:
         misfire_grace_time=600,
     )
     logger.info("📅 Scheduled daily follow job at 10:30 AM")
+
+    # ── Daily Research Job ────────────────────────────────────────────────────
+    scheduler.add_job(
+        func=run_research_job,
+        trigger=CronTrigger(hour=6, minute=0),
+        id="research_job",
+        name="Daily research job at 06:00",
+        misfire_grace_time=600,
+    )
+    logger.info("📅 Scheduled daily research job at 06:00 AM")
 
     return scheduler

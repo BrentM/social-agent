@@ -2,22 +2,14 @@
 follower.py — Discovers and follows relevant ADHD-related accounts
 """
 
-import json
 import os
 import time
 from loguru import logger
 from xdk.users.models import FollowUserRequest
 from bot.auth import get_client
-from bot.database import has_followed, mark_followed, get_daily_follow_count
+from bot.database import has_followed, mark_followed, get_daily_follow_count, get_follow_queries
 
-CONTENT_DIR = os.path.join(os.path.dirname(__file__), "..", "content")
 MAX_DAILY_FOLLOWS = int(os.getenv("MAX_DAILY_FOLLOWS", 20))
-
-
-def load_follow_targets() -> dict:
-    path = os.path.join(CONTENT_DIR, "follow_targets.json")
-    with open(path, "r") as f:
-        return json.load(f)
 
 
 def run_follow_job():
@@ -34,8 +26,7 @@ def run_follow_job():
 
     logger.info(f"🔎 Starting follow job. Can follow {remaining} more accounts today.")
 
-    targets = load_follow_targets()
-    search_queries = targets.get("search_queries", [])
+    search_queries = get_follow_queries()
 
     client = get_client()
     me = client.users.get_me()
