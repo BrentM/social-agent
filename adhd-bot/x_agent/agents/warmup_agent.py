@@ -2,6 +2,7 @@ from x_agent.agents.base_agent import BaseAgent
 
 
 class WarmupAgent(BaseAgent):
+    strategy = "warmup"
     system_prompt = """
     You are managing a NEW X account (under 12 posts).
     Your job is to establish a content foundation.

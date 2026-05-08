@@ -72,6 +72,16 @@ def mark_followed(x_user_id: str) -> None:
     ).execute()
 
 
+# ── Search query log ──────────────────────────────────────────────────────────
+
+def log_search_query(query: str, result_count: int, strategy: str | None = None) -> None:
+    get_client().table("search_queries").insert({
+        "query": query,
+        "result_count": result_count,
+        "strategy": strategy,
+    }).execute()
+
+
 # ── Discovered posts + users ──────────────────────────────────────────────────
 
 def save_posts_and_users(posts: list[dict], users: list[dict]) -> None:

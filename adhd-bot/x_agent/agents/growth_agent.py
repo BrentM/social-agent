@@ -2,6 +2,7 @@ from x_agent.agents.base_agent import BaseAgent
 
 
 class GrowthAgent(BaseAgent):
+    strategy = "growth"
     system_prompt = """
     You are managing an ESTABLISHED X account (12+ posts).
     Your job is to grow an engaged audience steadily.

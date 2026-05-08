@@ -30,12 +30,13 @@ After each run, summarise what you searched, posted, and followed in 2-3 sentenc
 """
 
 
-def make_tools(x_client, db) -> list:
+def make_tools(x_client, db, strategy: str | None = None) -> list:
     @beta_tool
     def search_posts(query: str, max_results: int = 10) -> str:
         """Search recent X posts by keyword. Returns posts with author info. Saves results to database."""
         results = x_client.search_posts(query, max_results)
         db.save_posts_and_users(results["posts"], results["users"])
+        db.log_search_query(query, len(results["posts"]), strategy)
         # Return a condensed view so Claude can reason about who to follow
         condensed = [
             {
@@ -88,7 +89,7 @@ class BaseAgent:
     def __init__(self, x_client, db):
         self._x_client = x_client
         self._db = db
-        self._tools = make_tools(x_client, db)
+        self._tools = make_tools(x_client, db, strategy=getattr(self, "strategy", None))
         self._client = Anthropic()
 
     def run(self, user_message: str) -> str:

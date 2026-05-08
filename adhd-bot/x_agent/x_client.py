@@ -75,6 +75,7 @@ class XClient:
                     "author_x_id": author_id,
                     "text": tweet.get("text", ""),
                     "like_count": metrics.get("like_count", 0),
+                    "search_query": query,
                     "author_username": author.get("username", ""),
                     "author_followers": author.get("followers_count", 0),
                     "author_bio": author.get("bio", ""),
