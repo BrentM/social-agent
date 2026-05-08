@@ -3,7 +3,6 @@ main.py — Scheduler entry point for the x_agent growth system.
 Run with: python -m x_agent.main
 """
 
-import sys
 import os
 from dotenv import load_dotenv
 from loguru import logger
@@ -12,7 +11,6 @@ load_dotenv()
 
 os.makedirs("logs", exist_ok=True)
 logger.add("logs/x_agent.log", rotation="1 week", retention="4 weeks", level="INFO")
-logger.add(sys.stdout, level="INFO")
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 from x_agent.x_client import XClient
