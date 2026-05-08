@@ -5,7 +5,7 @@ x_client.py — Thin wrapper around xdk for the growth agent system.
 import os
 import xdk
 from xdk.oauth1_auth import OAuth1
-from xdk.posts.models import CreateRequest
+from xdk.posts.models import CreateRequest, CreateRequestReply
 from xdk.users.models import FollowUserRequest
 from loguru import logger
 
@@ -86,6 +86,15 @@ class XClient:
 
     def post_tweet(self, text: str) -> dict:
         response = self._client.posts.create(body=CreateRequest(text=text))
+        return {"x_post_id": response.data.id}
+
+    def create_reply(self, text: str, reply_to: str) -> dict:
+        response = self._client.posts.create(
+            body=CreateRequest(
+                text=text,
+                reply=CreateRequestReply(in_reply_to_tweet_id=reply_to),
+            )
+        )
         return {"x_post_id": response.data.id}
 
     def follow_user(self, user_id: str) -> None:

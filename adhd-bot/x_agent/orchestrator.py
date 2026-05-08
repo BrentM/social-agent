@@ -11,6 +11,8 @@ from loguru import logger
 from x_agent.config import MODEL, ORCHESTRATOR_MAX_TOKENS, WARMUP_THRESHOLD
 from x_agent.agents.warmup_agent import WarmupAgent
 from x_agent.agents.growth_agent import GrowthAgent
+from x_agent.agents.engagement_agent import EngagementAgent
+from x_agent.research_phase import run_research_phase
 
 ORCHESTRATOR_PROMPT = f"""
 You are a strategy orchestrator for an ADHD tips X account.
@@ -20,14 +22,17 @@ Decision criteria:
 - Under {WARMUP_THRESHOLD} posts → warmup strategy (post more, follow less)
 - {WARMUP_THRESHOLD}+ posts → growth strategy (balanced posting and following)
 
-Always provide a clear reason for your choice.
+If high-performing posts are provided, also run the engagement strategy after the posting strategy.
+
+Always provide a clear reason for your choices.
 """
 
 
 def run_orchestrator(x_client, db) -> None:
     stats = db.get_account_stats()
     post_count = stats["post_count"]
-    logger.info(f"Orchestrator starting. Account stats: {stats}")
+    research = run_research_phase(db)
+    logger.info(f"Orchestrator starting. Account stats: {stats}. Research posts found: {len(research.posts)}")
 
     def make_orchestrator_tools(x_client, db):
         @beta_tool
@@ -50,7 +55,24 @@ def run_orchestrator(x_client, db) -> None:
             logger.info(f"Growth agent summary: {summary}")
             return f"Growth agent completed. Summary: {summary}"
 
-        return [run_warmup_strategy, run_growth_strategy]
+        @beta_tool
+        def run_engagement_strategy(reason: str, candidate_post_ids: list[str]) -> str:
+            """Run the engagement agent to evaluate and optionally reply to high-performing posts.
+            Pass the x_post_id values of candidate posts found during research.
+            Use when research surfaced one or more posts with strong engagement."""
+            logger.info(f"Running engagement strategy. Candidates: {candidate_post_ids}. Reason: {reason}")
+            agent = EngagementAgent(x_client, db)
+            agent.run(reason=reason, candidate_ids=candidate_post_ids)
+            return "Engagement agent completed."
+
+        return [run_warmup_strategy, run_growth_strategy, run_engagement_strategy]
+
+    user_message = f"""Account stats: {json.dumps(stats)}
+
+High-performing posts found during research ({len(research.posts)} total):
+{json.dumps(research.posts)}
+
+Select and run the correct posting strategy. If high-performing posts are listed above, also run the engagement strategy."""
 
     client = Anthropic()
     tools = make_orchestrator_tools(x_client, db)
@@ -58,10 +80,7 @@ def run_orchestrator(x_client, db) -> None:
     runner = client.beta.messages.tool_runner(
         model=MODEL,
         system=ORCHESTRATOR_PROMPT,
-        messages=[{
-            "role": "user",
-            "content": f"Account stats: {json.dumps(stats)}. Select and run the best strategy.",
-        }],
+        messages=[{"role": "user", "content": user_message}],
         tools=tools,
         max_tokens=ORCHESTRATOR_MAX_TOKENS,
     )
