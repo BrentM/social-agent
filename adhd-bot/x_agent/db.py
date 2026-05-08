@@ -113,7 +113,7 @@ def get_discovered_post_by_x_id(x_post_id: str) -> dict | None:
         .maybe_single()
         .execute()
     )
-    return response.data
+    return response.data if response is not None else None
 
 
 def get_reply_count_today() -> int:

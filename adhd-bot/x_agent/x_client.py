@@ -21,7 +21,6 @@ class XClient:
         )
         self._client = xdk.Client(
             base_url=os.getenv("X_API_BASE_URL", "https://api.x.com"),
-            bearer_token=os.environ["BEARER_TOKEN"],
             auth=oauth1,
         )
         self._my_user_id: str | None = None

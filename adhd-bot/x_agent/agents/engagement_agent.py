@@ -5,6 +5,7 @@ engagement_agent.py — Evaluates candidate posts and optionally replies to one 
 import json
 from anthropic import Anthropic, beta_tool
 from loguru import logger
+from requests.exceptions import HTTPError
 from x_agent.config import MODEL, AGENT_MAX_TOKENS
 
 ENGAGEMENT_SYSTEM_PROMPT = """
@@ -63,7 +64,12 @@ class EngagementAgent:
             reason: one sentence explaining why this post was chosen and what value the reply adds."""
             if len(text) > 280:
                 return f"Error: reply is {len(text)} characters, must be 280 or fewer. Shorten it."
-            result = x_client.create_reply(text=text, reply_to=in_reply_to_x_post_id)
+            try:
+                result = x_client.create_reply(text=text, reply_to=in_reply_to_x_post_id)
+            except HTTPError as e:
+                status = e.response.status_code if e.response is not None else "unknown"
+                logger.error(f"X API error {status} posting reply: {e}")
+                return json.dumps({"error": f"X API returned {status}: {e}"})
             db.log_reply(
                 x_post_id=result["x_post_id"],
                 in_reply_to=in_reply_to_x_post_id,
