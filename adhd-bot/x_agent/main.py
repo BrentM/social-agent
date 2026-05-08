@@ -34,7 +34,14 @@ def job():
 def main():
     logger.info("x_agent starting up...")
     scheduler = BlockingScheduler()
-    scheduler.add_job(job, "interval", hours=SCHEDULER_INTERVAL_HOURS, id="orchestrator")
+    scheduler.add_job(
+        job,
+        "interval",
+        hours=SCHEDULER_INTERVAL_HOURS,
+        id="orchestrator",
+        misfire_grace_time=300,  # allow up to 5 min late; avoids skip if startup run runs long
+        coalesce=True,           # if multiple fires were missed, run only once
+    )
 
     # Run immediately on startup, then on the interval
     job()
