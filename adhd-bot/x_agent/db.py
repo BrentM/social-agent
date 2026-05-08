@@ -156,6 +156,35 @@ def mark_reply_attempted(x_post_id: str) -> None:
 
 # ── Discovered posts + users ──────────────────────────────────────────────────
 
+def upsert_posts_and_users(posts: list[dict], users: list[dict]) -> None:
+    """Upsert discovered users and posts, overwriting existing records."""
+    client = get_client()
+
+    for user in users:
+        client.table("discovered_users").upsert(
+            {
+                "x_user_id": user["x_user_id"],
+                "username": user.get("username"),
+                "bio": user.get("bio"),
+                "followers_count": user.get("followers_count", 0),
+            },
+            on_conflict="x_user_id",
+        ).execute()
+
+    for post in posts:
+        client.table("discovered_posts").upsert(
+            {
+                "x_post_id": post["x_post_id"],
+                "author_x_id": post.get("author_x_id"),
+                "text": post.get("text"),
+                "like_count": post.get("like_count", 0),
+                "search_query": post.get("search_query"),
+                "reply_settings": post.get("reply_settings", "everyone"),
+            },
+            on_conflict="x_post_id",
+        ).execute()
+
+
 def save_posts_and_users(posts: list[dict], users: list[dict]) -> None:
     """Upsert discovered users first (FK target), then discovered posts."""
     client = get_client()
