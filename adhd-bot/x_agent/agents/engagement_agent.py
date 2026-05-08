@@ -64,11 +64,15 @@ class EngagementAgent:
             reason: one sentence explaining why this post was chosen and what value the reply adds."""
             if len(text) > 280:
                 return f"Error: reply is {len(text)} characters, must be 280 or fewer. Shorten it."
+            post_meta = db.get_discovered_post_by_x_id(in_reply_to_x_post_id)
+            if post_meta and post_meta.get("reply_settings", "everyone") != "everyone":
+                return json.dumps({"error": f"Post {in_reply_to_x_post_id} has reply_settings={post_meta['reply_settings']}; skipping."})
             try:
                 result = x_client.create_reply(text=text, reply_to=in_reply_to_x_post_id)
             except HTTPError as e:
                 status = e.response.status_code if e.response is not None else "unknown"
                 logger.error(f"X API error {status} posting reply: {e}")
+                db.mark_reply_attempted(in_reply_to_x_post_id)
                 return json.dumps({"error": f"X API returned {status}: {e}"})
             db.log_reply(
                 x_post_id=result["x_post_id"],

@@ -90,8 +90,9 @@ def get_recent_unevaluated_posts() -> list[dict]:
     response = (
         get_client()
         .table("discovered_posts")
-        .select("x_post_id, text, like_count, search_query, author_x_id")
+        .select("x_post_id, text, like_count, search_query, author_x_id, reply_settings")
         .eq("reply_attempted", False)
+        .eq("reply_settings", "everyone")
         .gte("discovered_at", cutoff)
         .gte("like_count", 10)
         .order("like_count", desc=True)
@@ -106,7 +107,7 @@ def get_discovered_post_by_x_id(x_post_id: str) -> dict | None:
         get_client()
         .table("discovered_posts")
         .select(
-            "x_post_id, text, like_count, search_query, discovered_at,"
+            "x_post_id, text, like_count, search_query, discovered_at, reply_settings,"
             " discovered_users(username, bio, followers_count)"
         )
         .eq("x_post_id", x_post_id)
@@ -179,6 +180,7 @@ def save_posts_and_users(posts: list[dict], users: list[dict]) -> None:
                 "text": post.get("text"),
                 "like_count": post.get("like_count", 0),
                 "search_query": post.get("search_query"),
+                "reply_settings": post.get("reply_settings", "everyone"),
             },
             on_conflict="x_post_id",
             ignore_duplicates=True,

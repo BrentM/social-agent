@@ -43,7 +43,7 @@ class XClient:
         for page in self._client.posts.search_recent(
             query=query + " lang:en -is:retweet",
             max_results=max(10, min(max_results, 100)),
-            tweet_fields=["public_metrics", "author_id"],
+            tweet_fields=["public_metrics", "author_id", "reply_settings"],
             expansions=["author_id"],
             user_fields=["description", "public_metrics", "username"],
         ):
@@ -75,6 +75,7 @@ class XClient:
                     "text": tweet.get("text", ""),
                     "like_count": metrics.get("like_count", 0),
                     "search_query": query,
+                    "reply_settings": tweet.get("reply_settings", "everyone"),
                     "author_username": author.get("username", ""),
                     "author_followers": author.get("followers_count", 0),
                     "author_bio": author.get("bio", ""),
