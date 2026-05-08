@@ -32,7 +32,7 @@ def run_orchestrator(x_client, db) -> None:
     def make_orchestrator_tools(x_client, db):
         @beta_tool
         def run_warmup_strategy(reason: str) -> str:
-            """Run the warmup agent. Use for new accounts with fewer than 50 posts."""
+            """Run the warmup agent. Use for new accounts with fewer than 12 posts."""
             logger.info(f"Running warmup strategy. Reason: {reason}")
             db.log_agent_run("warmup", reason, post_count)
             agent = WarmupAgent(x_client, db)
@@ -42,7 +42,7 @@ def run_orchestrator(x_client, db) -> None:
 
         @beta_tool
         def run_growth_strategy(reason: str) -> str:
-            """Run the growth agent. Use for established accounts with 50+ posts."""
+            """Run the growth agent. Use for established accounts with 12+ posts."""
             logger.info(f"Running growth strategy. Reason: {reason}")
             db.log_agent_run("growth", reason, post_count)
             agent = GrowthAgent(x_client, db)

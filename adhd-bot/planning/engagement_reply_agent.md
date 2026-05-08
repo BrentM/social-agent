@@ -23,23 +23,22 @@ paying attention.
 Scheduler
     └── run_orchestrator()
             ├── 1. ResearchPhase.run()        → ResearchResult
-            │       ├── keyword searches
-            │       ├── key person timelines
-            │       └── hashtag top posts
+            │       └── reads discovered_posts (populated by warmup/growth agents)
             │
-            ├── 2. Orchestrator Agent (receives ResearchResult)
+            ├── 2. Orchestrator Agent (receives ResearchResult + account stats)
             │       ├── reasons about account state
             │       ├── invokes run_warmup_strategy(reason)
             │       │        OR run_growth_strategy(reason)
             │       └── invokes run_engagement_strategy(candidates)
-            │               [if high-performing posts found]
+            │               [if research returned posts]
             │
             └── Both steps complete independently; engagement is additive
 ```
 
-**Key change:** Research moves from inside each sub-agent to a shared pre-step.
-The `ResearchResult` is passed to the orchestrator so it informs both the
-strategy decision and the engagement opportunity check.
+**Key change:** The research phase is a zero-cost database read. The warmup and
+growth agents already write discovered posts to Supabase during their normal
+runs — the engagement agent reuses that data rather than making additional X API
+calls. No separate research job is required.
 
 ---
 
@@ -47,31 +46,39 @@ strategy decision and the engagement opportunity check.
 
 ### Purpose
 
-Read today's high-performing posts from Supabase. No X API calls are made
-during this step — the data was populated by the daily research job (see
-[daily_research_phase.md](daily_research_phase.md)).
+Read recent posts from `discovered_posts` in Supabase. The warmup and growth
+agents already populate this table during their normal search-and-follow runs,
+so no X API calls are needed here.
+
+If no posts are found (agents haven't run yet, or all recent posts are already
+evaluated), the orchestrator still runs the posting strategy and silently skips
+engagement.
 
 ### Module
 
-`x_agent/research_phase.py` — a plain database read, not an agent.
+`x_agent/research_phase.py` — plain database read, not an agent.
 
 ```python
 @dataclass
 class ResearchResult:
-    high_performing: list[dict]    # posts flagged high_performing=true today
+    posts: list[dict]    # recent, unevaluated posts from discovered_posts
 ```
 
-### Output
+### Query
 
 ```python
 def run_research_phase(db) -> ResearchResult:
-    high_performing = db.get_todays_high_performing_posts()
-    return ResearchResult(high_performing=high_performing)
+    posts = db.get_recent_unevaluated_posts()
+    return ResearchResult(posts=posts)
 ```
 
-`get_todays_high_performing_posts()` queries `discovered_posts` where
-`high_performing=true`, `reply_attempted=false`, and
-`discovered_at >= today 00:00`.
+`get_recent_unevaluated_posts()` queries `discovered_posts` where:
+- `reply_attempted = false`
+- `discovered_at >= NOW() - INTERVAL '24 hours'`
+- `like_count >= 10` — coarse filter to avoid passing low-signal posts to the agent
+
+Results are ordered by `like_count DESC` so the agent sees the strongest
+candidates first.
 
 ---
 
@@ -129,7 +136,7 @@ listed above, also run the engagement strategy.
         system=ORCHESTRATOR_PROMPT,
         messages=[{"role": "user", "content": user_message}],
         tools=[run_warmup_strategy, run_growth_strategy, run_engagement_strategy],
-        max_tokens=600,
+        max_tokens=1000,
     ):
         print(message)
 ```
@@ -171,6 +178,10 @@ If no candidate post meets the bar, do nothing and explain why.
 
 ### Tools
 
+All post IDs passed between the orchestrator and engagement agent are
+`x_post_id` values (X's own tweet ID, e.g. `"1234567890"`), not internal
+Supabase UUIDs.
+
 ```python
 @beta_tool
 def get_reply_count_today() -> str:
@@ -180,31 +191,37 @@ def get_reply_count_today() -> str:
     return json.dumps({"replies_today": count, "cap": 3, "can_reply": count < 3})
 
 @beta_tool
-def get_post_details(post_id: str) -> str:
+def get_post_details(x_post_id: str) -> str:
     """Fetch full text, author info, and engagement metrics for a discovered post
-    from the database."""
-    post = db.get_discovered_post(post_id)
+    from the database. x_post_id is X's tweet ID (not the internal UUID)."""
+    post = db.get_discovered_post_by_x_id(x_post_id)
     return json.dumps(post)
 
 @beta_tool
-def post_reply(in_reply_to_post_id: str, text: str, reason: str) -> str:
-    """Post a reply to a specific post on X. Logs the reply to database.
+def post_reply(in_reply_to_x_post_id: str, text: str, reason: str) -> str:
+    """Post a reply to a specific post on X. Logs the reply to database and
+    marks the post as evaluated so it is not re-queued.
     reason: one sentence explaining why this post was chosen and what value
     the reply adds."""
-    result = x_client.create_reply(text=text, reply_to=in_reply_to_post_id)
+    result = x_client.create_reply(text=text, reply_to=in_reply_to_x_post_id)
     db.log_reply(
         x_post_id=result.id,
-        in_reply_to=in_reply_to_post_id,
+        in_reply_to=in_reply_to_x_post_id,
         text=text,
         reason=reason,
     )
+    db.mark_reply_attempted(in_reply_to_x_post_id)   # prevent re-evaluation
     return f"Reply posted: {text}"
 
 @beta_tool
-def skip_engagement(reason: str) -> str:
+def skip_engagement(reason: str, evaluated_x_post_ids: list[str]) -> str:
     """Call this when no candidate post meets the bar for a reply.
-    reason: brief explanation of why no post was chosen."""
+    reason: brief explanation of why no post was chosen.
+    evaluated_x_post_ids: all post IDs that were considered, so they are not
+    re-queued in future runs."""
     db.log_skipped_engagement(reason)
+    for x_post_id in evaluated_x_post_ids:
+        db.mark_reply_attempted(x_post_id)
     return f"Engagement skipped: {reason}"
 ```
 
@@ -222,10 +239,11 @@ Candidate post IDs to evaluate: {json.dumps(candidate_ids)}
 
 Steps:
 1. Check reply count today (get_reply_count_today).
-2. If cap is reached, call skip_engagement.
+2. If cap is reached, call skip_engagement with all candidate IDs.
 3. Otherwise, review each candidate (get_post_details).
 4. Choose the single best reply opportunity or skip if none qualify.
 5. If you reply, craft the text and call post_reply.
+6. If you skip, call skip_engagement with all candidate IDs you reviewed.
 """
         for message in client.beta.messages.tool_runner(
             model="claude-haiku-4-5",
@@ -265,17 +283,18 @@ CREATE TABLE agent_replies (
 
 ### Modified table: `discovered_posts`
 
-Add two columns:
+One column added to the existing table:
 
 ```sql
 ALTER TABLE discovered_posts
-    ADD COLUMN engagement_rate   numeric,     -- calculated at collection time
-    ADD COLUMN reply_attempted   boolean NOT NULL DEFAULT false;
+    ADD COLUMN reply_attempted boolean NOT NULL DEFAULT false;
 ```
 
-`reply_attempted` is set to `true` after the engagement agent evaluates the
-post (regardless of whether a reply was sent), preventing the same post from
-being re-evaluated across runs.
+`reply_attempted` is set to `true` by the engagement agent after evaluating a
+post (via `post_reply` or `skip_engagement`), preventing re-evaluation in
+future runs. This is the only schema dependency this plan has on `discovered_posts`
+— the `engagement_rate` and `high_performing` columns belong to
+[daily_research_phase.md](daily_research_phase.md) and are not required here.
 
 ---
 
@@ -283,11 +302,12 @@ being re-evaluated across runs.
 
 | Helper | Purpose |
 |---|---|
-| `get_reply_count_today()` | Count rows in `agent_replies` where `skipped=false` and `posted_at >= today 00:00` |
+| `get_recent_unevaluated_posts()` | Query `discovered_posts` where `reply_attempted=false`, `discovered_at >= NOW() - INTERVAL '24 hours'`, `like_count >= 10`; ordered by `like_count DESC` |
+| `get_discovered_post_by_x_id(x_post_id)` | Fetch full post details from `discovered_posts` by X tweet ID |
+| `get_reply_count_today()` | Count rows in `agent_replies` where `skipped=false` and `posted_at >= NOW() - INTERVAL '24 hours'` |
 | `log_reply(x_post_id, in_reply_to, text, reason)` | Insert into `agent_replies` with `skipped=false` |
 | `log_skipped_engagement(reason)` | Insert into `agent_replies` with `skipped=true`, `x_post_id=NULL` |
-| `get_discovered_post(post_id)` | Fetch post details from `discovered_posts` |
-| `mark_reply_attempted(post_id)` | Set `reply_attempted=true` on a discovered post |
+| `mark_reply_attempted(x_post_id)` | Set `reply_attempted=true` on a `discovered_posts` row; called inside `post_reply` and `skip_engagement` tools |
 
 ---
 
@@ -295,13 +315,14 @@ being re-evaluated across runs.
 
 | File | Action |
 |---|---|
-| `x_agent/research_phase.py` | **Create** — shared pre-run research; returns `ResearchResult` |
+| `x_agent/research_phase.py` | **Create** — lightweight pre-run topic search; returns `ResearchResult` |
 | `x_agent/agents/engagement_agent.py` | **Create** — `EngagementAgent` class |
 | `x_agent/orchestrator.py` | **Modify** — call research phase, add `run_engagement_strategy` tool, pass research results to user message |
-| `x_agent/db.py` | **Extend** — add reply/skip log helpers, `get_reply_count_today`, `get_discovered_post` |
-| `x_agent/agents/warmup_agent.py` | **Modify** — remove internal research (now handled by research phase) |
-| `x_agent/agents/growth_agent.py` | **Modify** — remove internal research (now handled by research phase) |
-| `scripts/engagement_migration.sql` | **Create** — `agent_replies` table + `discovered_posts` column additions |
+| `x_agent/db.py` | **Extend** — add helpers listed in Section 5 |
+| `scripts/engagement_migration.sql` | **Create** — `agent_replies` table only; `discovered_posts` columns are owned by `daily_research_phase.md` |
+
+The warmup and growth agents are not modified — they continue to do their own
+follow-discovery research independently of this flow.
 
 ---
 
@@ -314,15 +335,17 @@ being re-evaluated across runs.
 
 ### X API cost
 
-The research phase makes no X API calls — it reads from the Supabase cache
-populated by the daily research job (see [daily_research_phase.md](daily_research_phase.md),
-~$0.42/day). The only X API call added by this flow is a single `POST /2/tweets`
-(reply) when the engagement agent fires — same endpoint and cost as a regular tweet.
+The research phase makes no X API calls — it reads from `discovered_posts`
+already populated by the warmup and growth agents. The only X API call added
+by this entire flow is a single `POST /2/tweets` (reply) when the engagement
+agent fires.
 
-| Operation | Calls/run | Est. cost |
+| Operation | X API calls/run | Est. cost |
 |---|---|---|
-| Research phase (Supabase read only) | 0 X API calls | $0.00 |
+| Research phase (Supabase read) | 0 | $0.00 |
 | Reply post (if triggered, max 1/run) | 0–1 | per-post cost |
+
+No additional API budget is required beyond what warmup and growth already spend.
 
 ---
 

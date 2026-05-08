@@ -5,6 +5,7 @@ base_agent.py — Shared tools and base agent class for the growth system.
 import json
 from anthropic import Anthropic, beta_tool
 from loguru import logger
+from requests.exceptions import HTTPError
 from x_agent.config import MODEL, AGENT_MAX_TOKENS
 
 SHARED_NICHE_PROMPT = """
@@ -65,7 +66,15 @@ def make_tools(x_client, db) -> list:
         """Follow a user by their X user ID (from search_posts results). Updates follow status in database."""
         if db.is_already_followed(user_id):
             return f"Already following user {user_id} — skipping."
-        x_client.follow_user(user_id)
+        try:
+            x_client.follow_user(user_id)
+        except HTTPError as e:
+            status = e.response.status_code if e.response is not None else "unknown"
+            logger.warning(f"Failed to follow user {user_id}: HTTP {status}")
+            if status == 400:
+                db.mark_followed(user_id)  # X says already following; sync DB
+                return f"Already following user {user_id} on X (DB was out of sync)."
+            return f"Could not follow user {user_id}: HTTP {status}."
         db.mark_followed(user_id)
         logger.info(f"Followed user {user_id}")
         return f"Successfully followed user {user_id}."
