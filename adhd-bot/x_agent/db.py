@@ -107,7 +107,7 @@ def get_discovered_post_by_x_id(x_post_id: str) -> dict | None:
         get_client()
         .table("discovered_posts")
         .select(
-            "x_post_id, text, like_count, search_query, discovered_at, reply_settings,"
+            "x_post_id, text, like_count, search_query, discovered_at, reply_settings, reply_attempted,"
             " discovered_users(username, bio, followers_count)"
         )
         .eq("x_post_id", x_post_id)

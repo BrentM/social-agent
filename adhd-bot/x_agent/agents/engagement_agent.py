@@ -65,6 +65,8 @@ class EngagementAgent:
             if len(text) > 280:
                 return f"Error: reply is {len(text)} characters, must be 280 or fewer. Shorten it."
             post_meta = db.get_discovered_post_by_x_id(in_reply_to_x_post_id)
+            if post_meta and post_meta.get("reply_attempted"):
+                return json.dumps({"error": f"Post {in_reply_to_x_post_id} already attempted; skipping."})
             if post_meta and post_meta.get("reply_settings", "everyone") != "everyone":
                 return json.dumps({"error": f"Post {in_reply_to_x_post_id} has reply_settings={post_meta['reply_settings']}; skipping."})
             try:
