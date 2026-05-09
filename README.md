@@ -4,6 +4,8 @@ An autonomous X (Twitter) growth agent for an ADHD tips account. Built with the 
 
 The relevant code lives entirely in [adhd-bot/x_agent/](adhd-bot/x_agent/).
 
+See example logs from the running bot in Sample-logs.txt
+
 ---
 
 ## How it works

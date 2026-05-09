@@ -1,0 +1,250 @@
+2026-05-08 00:59:08.906 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 00:59:10.276 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 23}. Research posts found: 0
+2026-05-08 00:59:12.667 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 23 posts, exceeding the 12-post threshold for an established account. Growth strategy appropriate for balanced posting and following to expand reach and audience.
+2026-05-08 00:59:15.821 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: ADHD brain: "I'll just check one thing real quick" 20 tabs l...
+2026-05-08 00:59:23.091 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 361203149
+2026-05-08 00:59:23.379 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 42683763
+2026-05-08 00:59:27.984 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: **Growth Run Summary:**
+
+✅ **Posted:** A relatable tweet about ADHD distraction with the 2-minute timer tip—hits the classic "20 tabs" experience our audience knows well.
+
+✅ **Searched:** 3 queries targeting ADHD strategies, neurodivergent mental health, and ADHD community—found solid accounts like @autismtoday (31k followers), @AdhdEmbraceUK (family support focus), and @adhdireland (active community org).
+
+✅ **Followed:** 2 new targeted accounts—@adhdireland (grassroots ADHD community in Ireland with 3.5k followers) and @MohojoWerksLLC (software engineer building ADHD-friendly tools). Already following other key accounts, so skipped those to avoid redundancy.
+2026-05-08 00:59:32.396 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 01:59:12.153 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 01:59:13.549 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 24}. Research posts found: 1
+2026-05-08 01:59:16.977 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 24 posts (established account). Running growth strategy for balanced posting and following to expand reach and engagement.
+2026-05-08 01:59:20.170 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: ADHD brain got you jumping between tasks? Try the "two-minut...
+2026-05-08 01:59:28.811 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: **Summary:**
+
+✅ **Posted:** A tweet on the two-minute rule as a practical ADHD task management strategy.
+
+✅ **Searched:** 3 queries — "ADHD productivity tips," "neurodivergent support community," and "ADHD executive dysfunction coping" — to find relevant accounts and engagement opportunities.
+
+✅ **Followed:** Already following the most relevant accounts from these results (BossA49921, autismtoday, asphodillia, LikeDiamon32802, iamestherjay). The account is actively engaged with quality ADHD/neurodivergent creators in the space.
+2026-05-08 01:59:28.811 | INFO     | x_agent.orchestrator:run_engagement_strategy:63 - Running engagement strategy. Candidates: ['2052088621587427617']. Reason: High-performing post identified with 34 likes on neurodivergent mental health topic. Running engagement strategy to capitalize on strong community interest and build conversational momentum.
+2026-05-08 01:59:36.122 | ERROR    | x_agent.agents.engagement_agent:post_reply:76 - X API error 403 posting reply: 403 Client Error: Forbidden for url: https://api.x.com/2/tweets
+2026-05-08 01:59:39.202 | INFO     | x_agent.agents.engagement_agent:run:122 - Engagement agent run complete.
+2026-05-08 01:59:41.241 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 02:59:15.579 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 02:59:16.973 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 25}. Research posts found: 0
+2026-05-08 02:59:19.636 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 25 posts (12+), indicating an established presence. Running growth strategy to balance posting and following activities for sustained audience expansion.
+2026-05-08 02:59:22.838 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: Your ADHD brain isn't broken—it's just wired different. Try ...
+2026-05-08 02:59:28.789 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1920532695613833216
+2026-05-08 02:59:33.301 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: **Growth cycle complete!** 
+
+✅ **Posted:** A relatable tweet about time-blocking and reframing ADHD brains (280 chars).
+✅ **Searched:** 3 queries around ADHD productivity tips, neurodivergent community support, and ADHD coaching/mental health (45 results total).
+✅ **Followed:** Successfully followed @DrGenevieve73 (ADHD coach with 940 followers). Already following other strong accounts like @autismtoday (32K followers) and @BossA49921 (ADHD productivity creator).
+
+Focus was on micro-influencers and experts with real engagement—skipped bots and low-signal accounts.
+2026-05-08 02:59:38.038 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 03:59:19.965 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 03:59:21.333 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 26}. Research posts found: 0
+2026-05-08 03:59:23.206 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 26 posts (established account with 12+ posts). Running growth strategy to balance posting and following for sustainable audience expansion.
+2026-05-08 03:59:27.492 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: ADHD brain when you have 5 important tasks: let's do the one...
+2026-05-08 03:59:34.568 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1810602546916163584
+2026-05-08 03:59:37.170 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: **Growth Run Summary:**
+
+✅ **Posted:** A relatable hook about ADHD task prioritization with a concrete, actionable tip about using visual reminders—ties directly to how ADHD brains work differently.
+
+🔍 **Searched:** "ADHD productivity tips," "ADHD community support," and "neurodivergent mental health" to find relevant accounts and trending conversations.
+
+👥 **Followed:** 1 new account (@eating_dis_clin—a clinician specializing in eating disorders + neurodiversity food challenges). The others were already in our follow list, which shows good prior targeting consistency.
+2026-05-08 03:59:39.205 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 04:59:30.379 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 04:59:31.600 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 27}. Research posts found: 0
+2026-05-08 04:59:33.418 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 27 posts (established account with 12+ posts). Running growth strategy to balance posting and following activities for continued audience expansion and engagement.
+2026-05-08 04:59:36.909 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: ADHD brain: "I'll just do this one quick task" 
+*3 hours lat...
+2026-05-08 04:59:48.739 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1769287579407470593
+2026-05-08 04:59:49.048 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1651931673032904705
+2026-05-08 04:59:49.389 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1960306433289035776
+2026-05-08 04:59:49.706 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1146311672497393664
+2026-05-08 04:59:50.015 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1961161932280627200
+2026-05-08 04:59:52.807 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: **Growth cycle complete!** 
+
+✅ **Posted:** A relatable tweet about hyperfocus and ADHD—acknowledging that the brain works differently, not broken.
+
+✅ **Searched:** "ADHD" and "mental health support" queries to find relevant, engaged accounts.
+
+✅ **Followed 5 accounts:** Targeted users actively discussing ADHD experiences, personal struggles, and mental health advocacy—including @upshine3 (8.9K followers, 14 likes on recent post), @DudeAdhd (3.2K followers with strong engagement), and mental health advocates.
+
+All actions logged and focused on building a genuine, engaged ADHD community.
+2026-05-08 04:59:56.392 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 05:59:34.126 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 05:59:35.515 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 28}. Research posts found: 1
+2026-05-08 05:59:39.045 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 28 posts, established enough for growth strategy. Ready for balanced posting and following to expand reach.
+2026-05-08 05:59:43.620 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: ADHD brain: can hyperfocus on random interests but can't do ...
+2026-05-08 05:59:53.594 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: **Growth cycle complete!** 
+
+✅ **Posted:** A practical tip about pairing boring tasks with hyperfixation interests—relatable hook + actionable advice on dopamine hacking.
+
+✅ **Searched:** 3 targeted queries ("ADHD tips advice," "neurodivergent mental health," "ADHD community support") to find engaged voices in the space.
+
+✅ **Followed:** All 5 top accounts were already in the follow list (BossA49921, aleams, autismtoday, MohojoWerksLLC, AdhdEmbraceUK)—solid indicator the account is already well-connected with the core ADHD community! 🎯
+2026-05-08 05:59:53.594 | INFO     | x_agent.orchestrator:run_engagement_strategy:63 - Running engagement strategy. Candidates: ['2052719184706969634']. Reason: High-performing post identified (14 likes) about ADHD burnout. Running engagement strategy to capitalize on strong audience resonance and expand reach through meaningful replies.
+2026-05-08 06:00:00.854 | ERROR    | x_agent.agents.engagement_agent:post_reply:76 - X API error 403 posting reply: 403 Client Error: Forbidden for url: https://api.x.com/2/tweets
+2026-05-08 06:00:04.314 | INFO     | x_agent.agents.engagement_agent:run:122 - Engagement agent run complete.
+2026-05-08 06:00:07.108 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 06:59:34.965 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 06:59:36.250 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 29}. Research posts found: 0
+2026-05-08 06:59:40.533 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 29 posts, well-established beyond the 12-post threshold. Running growth strategy to leverage the existing content base with balanced posting and strategic following to expand reach and audience engagement.
+2026-05-08 07:02:28.390 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: ADHD brain hack: If you can't start a task, set a timer for ...
+2026-05-08 07:02:40.846 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: Great! **Growth run summary:**
+
+✅ **Posted:** A practical 5-minute timer hack for task initiation—relatable and actionable, perfect for the ADHD audience.
+
+✅ **Searched:** 3 queries ("ADHD tips productivity," "neurodivergent mental health," "ADHD community support") to find relevant conversations and engaged creators.
+
+✅ **Already following top accounts:** All 5 target accounts (BossA49921 on productivity systems, AutismToday with 31K followers, MohojoWerksLLC building ADHD apps, AdhdEmbraceUK supporting families, and eating_dis_clin addressing neurodivergent maternal health) were already in our network—shows we've built solid foundations with key voices in the space. Next run will target fresh creators with strong engagement metrics.
+2026-05-08 07:02:42.732 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 07:59:45.026 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 07:59:46.300 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 30}. Research posts found: 0
+2026-05-08 07:59:49.252 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 30 posts, meeting the 12+ post threshold for established accounts. Ready to implement balanced posting and following strategy for sustainable growth.
+2026-05-08 07:59:52.682 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: Hyperfocus on the "wrong" task? That's not a flaw—it's a fea...
+2026-05-08 08:00:05.490 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 457813062
+2026-05-08 08:00:05.789 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 2832537916
+2026-05-08 08:00:06.212 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1191038007207436291
+2026-05-08 08:00:06.546 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1314665126545432576
+2026-05-08 08:00:06.827 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1519025009599127552
+2026-05-08 08:00:09.436 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: **Growth Run Summary:**
+
+✅ **Posted:** A relatable tweet about hyperfocus, reframing it as a strength rather than a flaw—encouraging people to lean into their natural ADHD wiring.
+
+✅ **Searched:** 3 queries ("ADHD," "mental health tips," "neurodiversity") to find relevant voices in the community.
+
+✅ **Followed:** 5 engaged accounts—including autism/neurodiversity advocates with solid follower counts (7.7K+), content creators actively discussing ADHD experiences, and voices promoting self-acceptance around being neurodivergent. These are genuine community members, not bots.
+2026-05-08 08:00:11.956 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 08:59:54.608 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 08:59:55.714 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 31}. Research posts found: 0
+2026-05-08 08:59:57.838 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 31 posts, indicating an established presence. Growth strategy is appropriate to maintain engagement momentum, increase reach through balanced posting and following, and continue building community around ADHD tips content.
+2026-05-08 09:00:01.225 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: ADHD brain working overtime at 11pm? Try the "5 minute rule"...
+2026-05-08 09:00:10.183 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: ## Growth Tasks Summary ✅
+
+**Posted:** A practical "5 minute rule" tweet — a relatable, actionable ADHD hack designed to overcome activation energy issues.
+
+**Searched:** 3 queries across "ADHD tips advice," "neurodivergent community support," and "mental health advocacy ADHD awareness" to find engaged creators in our niche.
+
+**Followed:** Already following the top accounts from this round (BossA49921, aleams, autismtoday, asphodillia, and LikeDiamon32802). This shows healthy audience overlap and that we've built momentum with key voices in the ADHD/neurodivergent space. Great sign for a mature account!
+2026-05-08 09:00:12.527 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 09:59:53.573 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 09:59:54.304 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 32}. Research posts found: 9
+2026-05-08 09:59:59.173 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 32 posts and is established. Running growth strategy to optimize balanced posting cadence and strategic community building through following relevant accounts in the ADHD and personal development space.
+2026-05-08 10:00:01.837 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: Your ADHD brain isn't broken—it's just wired differently. Tr...
+2026-05-08 10:00:11.179 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 2045432710366216192
+2026-05-08 10:00:11.604 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1904943963838304256
+2026-05-08 10:00:11.890 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 884577180964896769
+2026-05-08 10:00:14.093 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: **Growth run summary:**
+✅ **Posted:** A grounding technique tweet focused on sensory awareness for ADHD overwhelm—relatable, actionable, and stigma-free.
+
+✅ **Searched:** 6 targeted queries across ADHD tips, neurodiversity coaching, executive function, and mental health support to find engaged communities.
+
+✅ **Followed:** 3 relevant accounts—@ADHDParentz (ADHD parenting focus), @nagmindful (mental health therapy), and @SNAP4ADHD (brain health & ADHD support)—all actively posting in our niche.
+2026-05-08 10:00:14.094 | INFO     | x_agent.orchestrator:run_engagement_strategy:63 - Running engagement strategy. Candidates: ['2052781441822671044', '2052604105353470305', '2052570729552687194', '2052559745903669362', '2052582051682070623', '2052789188844818602', '2052608204115497216', '2052780568018882941', '2052792835670462611']. Reason: 9 high-performing posts identified with strong engagement (15-90 likes). These posts span empowerment messaging, subscriber milestones, dopamine psychology, and humor—all resonating well with the audience. Engaging with these will amplify reach and strengthen community bonds.
+2026-05-08 10:00:26.516 | INFO     | x_agent.agents.engagement_agent:skip_engagement:96 - Engagement skipped: All 9 posts are from @CryptoEmpressX, a crypto/Web3 marketing account. Posts are primarily promotional (subscriber milestones), off-topic humor (memes, pandemic jokes), or generic empowerment content. None are ADHD/neurodivergence-focused or relevant to mental health education. The dopamine-related post lacks sufficient context for meaningful engagement with our audience.
+2026-05-08 10:00:27.991 | INFO     | x_agent.agents.engagement_agent:run:122 - Engagement agent run complete.
+2026-05-08 10:00:30.392 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 10:59:54.380 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 10:59:55.647 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 33}. Research posts found: 1
+2026-05-08 10:59:59.983 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 33 posts and is established. Ready for balanced growth strategy focusing on optimized posting and strategic following to expand reach and build community.
+2026-05-08 11:00:02.912 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: ADHD brains are detail-oriented, creative, and hyperfocus ma...
+2026-05-08 11:00:08.392 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1050720750641053697
+2026-05-08 11:00:11.711 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: ## Summary
+
+✅ **Posted:** A relatable tweet about building systems around ADHD neurology rather than fighting it—encouraging audience engagement with a concrete, actionable mindset shift.
+
+✅ **Searched:** 3 queries covering ADHD tips, neurodivergent mental health community, and ADHD strategies—found solid accounts discussing productivity systems, reading challenges, and mental health support for neurodivergent youth.
+
+✅ **Followed:** 1 new account (@BunyGreat, 339 followers) who challenges generic ADHD advice myths. Already following 4 other high-engagement accounts including the Autism Today leader and ADHD productivity systems expert.
+2026-05-08 11:00:11.712 | INFO     | x_agent.orchestrator:run_engagement_strategy:63 - Running engagement strategy. Candidates: ['2052797307653935112']. Reason: High-performing post identified with 41 likes on relatable neurodivergent content about maintaining authenticity. Running engagement strategy to capitalize on this momentum and increase visibility.
+2026-05-08 11:00:18.177 | ERROR    | x_agent.agents.engagement_agent:post_reply:76 - X API error 403 posting reply: 403 Client Error: Forbidden for url: https://api.x.com/2/tweets
+2026-05-08 11:00:20.610 | INFO     | x_agent.agents.engagement_agent:skip_engagement:96 - Engagement skipped: Post qualified as excellent reply opportunity (relatable neurodivergent content on masking/authenticity with 41 likes), but X API returned 403 Forbidden when attempting to post reply. Technical issue prevented engagement despite strong fit.
+2026-05-08 11:00:22.136 | INFO     | x_agent.agents.engagement_agent:run:122 - Engagement agent run complete.
+2026-05-08 11:00:24.116 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 12:00:08.510 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 12:00:09.815 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 34}. Research posts found: 0
+2026-05-08 12:00:11.807 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 34 posts, establishing it as an established account ready for the growth strategy. This balanced approach of posting and following will help expand reach and engagement within the ADHD community.
+2026-05-08 12:00:14.988 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: Hyperfocus on the "wrong" task again? That's not a character...
+2026-05-08 12:00:21.548 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: **Growth Summary:**
+
+✅ **Posted:** A relatable tweet about hyperfocus and self-compassion for ADHD brains, with actionable strategies (body doubling, timers).
+
+🔍 **Searched:** Three queries — "ADHD tips strategies," "neurodivergent mental health community," and "ADHD coaching support" — finding established accounts like @autismtoday and local mental health orgs.
+
+👥 **Followed:** Already following the top engaged accounts from search results, so focused on quality over quantity. The account is actively connected to key voices in the neurodivergent community.
+2026-05-08 12:00:23.814 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 13:00:12.511 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 13:00:13.738 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 35}. Research posts found: 0
+2026-05-08 13:00:16.479 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 35 posts (12+ threshold met). Ready for established growth strategy with balanced posting and following approach to expand reach and engagement.
+2026-05-08 13:00:19.733 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: ADHD brain = executive function on hard mode. But here's the...
+2026-05-08 13:00:22.750 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1181687134610178048
+2026-05-08 13:00:24.735 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1801318072378068992
+2026-05-08 13:00:26.862 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: **Growth run complete!** 
+
+✅ **Posted:** A relatable tweet about ADHD executive function challenges with an actionable tip to remove friction from daily life.
+
+✅ **Searched:** Three queries ("ADHD tips strategies," "neurodivergence mental health support," "adult ADHD awareness") to find engaged voices in the space.
+
+✅ **Followed:** 2 targeted accounts—@novatjerneld (3.9k followers, authentic ADHD discourse) and Dr. Bruce Hoffman (mental health professional with ADHD expertise).
+2026-05-08 13:00:29.300 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 14:00:14.551 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 14:00:15.885 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 36}. Research posts found: 0
+2026-05-08 14:00:18.282 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 36 posts, indicating an established presence. Ready for growth strategy focused on balanced posting and following to increase reach and engagement with the ADHD community.
+2026-05-08 14:00:21.049 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: ADHD brain: "I'll just check one notification" = 45 minutes ...
+2026-05-08 14:00:26.542 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1224148585039745025
+2026-05-08 14:00:29.699 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: **Growth run complete!** 📊
+
+**Posted:** A relatable tip about notification overload and focus strategies—concrete, actionable, and conversational.
+
+**Searched:** "ADHD tips strategies," "neurodivergent community support," and "ADHD coaching management" to find engaged voices in the space.
+
+**Followed:** Successfully followed **@LauraFMcConnell** (12.5K followers, neurodivergence advocate in Scottish politics). Already following 4 other relevant accounts including autism leaders and community builders.
+
+Ready to build momentum with this targeted approach! 🚀
+2026-05-08 14:00:32.171 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 15:00:24.463 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 15:00:25.822 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 37}. Research posts found: 0
+2026-05-08 15:00:27.925 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 37 posts (12+), qualifying as established. Running growth strategy to balance posting frequency and strategic following for audience expansion and engagement growth.
+2026-05-08 15:00:30.876 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: ADHD brain move: can't remember where you put your keys, but...
+2026-05-08 15:00:35.723 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 468810223
+2026-05-08 15:00:36.033 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 723601628683747330
+2026-05-08 15:00:36.338 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 991596443738746881
+2026-05-08 15:00:36.642 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 16579093
+2026-05-08 15:00:39.752 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: **Growth run complete!** ✅
+
+**Posted:** A relatable tweet about hyperfocus as a superpower—turning a common ADHD frustration into an actionable reframe.
+
+**Searched:** "ADHD tips strategies," "neurodivergent adults support," and "ADHD community mental health" to find engaged creators talking about neurodiversity and mental health.
+
+**Followed:** 4 new accounts including US Autism (372 followers, longstanding org), UMO UK (neurodiversity support services, 417 followers), Stag_RosePPG (autism/ADHD peer support, 1k+ followers), and DonnyFreePress (local news covering neurodiversity initiatives). These accounts have regular engagement and aligned values.
+2026-05-08 15:00:42.028 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 16:00:30.147 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 16:00:31.452 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 38}. Research posts found: 0
+2026-05-08 16:00:33.205 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 38 posts, exceeding the 12-post threshold for established accounts. Using growth strategy to maintain balanced posting and following approach. No high-performing posts were identified during research, so engagement strategy is not needed at this time.
+2026-05-08 16:00:36.033 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: Your brain isn't broken—it's just wired differently. Try thi...
+2026-05-08 16:00:41.387 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1643327779101106176
+2026-05-08 16:00:41.664 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1317986278596616194
+2026-05-08 16:00:41.953 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 119910691
+2026-05-08 16:00:42.244 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1443723617817219073
+2026-05-08 16:00:42.544 | INFO     | x_agent.agents.base_agent:follow_user:80 - Followed user 1306959330655244293
+2026-05-08 16:00:45.411 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: **✅ Growth run complete!**
+
+**Posted:** A relatable tweet about ADHD brains being wired differently + a concrete tip on using reminders for transitions—actionable and reassuring.
+
+**Searched:** 3 queries ("ADHD tips strategies," "neurodivergence community," "ADHD coaches mental health") to find engaged accounts in the space.
+
+**Followed:** 5 relevant accounts including MercuryInVirgo (3.6K followers, strong engagement on neurodivergence topics), GainAutism (disability employment advocate), and several community members actively discussing ADHD and neurodivergence—all with visible audience engagement.
+2026-05-08 16:00:49.645 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
+2026-05-08 17:00:33.421 | DEBUG    | x_agent.x_client:get_my_user_id:32 - Authenticated as user ID 2051869647960514562
+2026-05-08 17:00:34.895 | INFO     | x_agent.orchestrator:run_orchestrator:35 - Orchestrator starting. Account stats: {'post_count': 39}. Research posts found: 2
+2026-05-08 17:00:37.509 | INFO     | x_agent.orchestrator:run_growth_strategy:51 - Running growth strategy. Reason: Account has 39 posts (established account with 12+ posts). Ready for growth phase with balanced posting and following strategy to expand reach and engagement.
+2026-05-08 17:00:40.270 | INFO     | x_agent.agents.base_agent:post_tweet:62 - Posted tweet: ADHD brain on a deadline: chaos mode activated 🚀 Try time-bl...
+2026-05-08 17:00:48.766 | INFO     | x_agent.orchestrator:run_growth_strategy:55 - Growth agent summary: **Growth run complete!** 
+
+Posted a relatable, actionable tweet about time-blocking for ADHD deadlines (Pomodoro-style). Searched three queries ("ADHD tips," "neurodivergent community support," and "ADHD coaches") and found engaged accounts in the neurodivergent space, including @autismtoday (31k followers) and community advocates. Already following the top candidates, so the account is building momentum with a solid follower base in the right niche.
+2026-05-08 17:00:48.767 | INFO     | x_agent.orchestrator:run_engagement_strategy:63 - Running engagement strategy. Candidates: ['2050670906142290054', '2051242905356902602']. Reason: Research identified 2 high-performing posts with strong engagement metrics. Running engagement strategy to evaluate and optionally reply to these posts for community building and increased visibility.
+2026-05-08 17:00:56.025 | INFO     | x_agent.agents.engagement_agent:skip_engagement:96 - Engagement skipped: Post 1 is a personal conversation not suitable for insertion. Post 2 contains scientifically inaccurate claims about ADHD being a fabrication—engaging would require debate rather than value-addition, and clashes with Boost's mission of evidence-based ADHD education.
+2026-05-08 17:00:58.087 | INFO     | x_agent.agents.engagement_agent:run:122 - Engagement agent run complete.
+2026-05-08 17:01:00.678 | INFO     | x_agent.orchestrator:run_orchestrator:88 - Orchestrator run complete.
